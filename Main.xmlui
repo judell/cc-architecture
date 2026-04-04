@@ -10,7 +10,6 @@
   <AppHeader>
     <Text fontWeight="bold">MyTerms</Text>
     <SpaceFiller />
-    <Button label="Reset" size="small" variant="outlined" onClick="{() => { localStorage.removeItem('reactflow-canvas'); offeredTerm = ''; agreementDecision = ''; location.reload() }}" />
     <Inspector />
   </AppHeader>
 
