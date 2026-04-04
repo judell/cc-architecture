@@ -70,11 +70,11 @@ An agreement that indicates you are willing to provide access to specific data u
       storageKey="contract-flow"
       onEdgeInfoClick="{(e) => { if (e.edgeId === 'e-pa-ea') { agreementsDialog.open() } else if (e.edgeId === 'e-signed') { auditTrailDialog.open() } else { edgeLabel = e.label; edgeId = e.edgeId; edgeInfoDialog.open() } }}"
       nodes="{[
-        { id: 'person',       position: { x: personX,      y: 150 }, data: { label: 'Alice', magnetY: '12%', _v: '' + agreementCount + offeredTerm + aliceDataStore.length },              width: 300, height: 380 },
-        { id: 'person-agent', position: { x: personAgentX, y: 150 }, data: { label: 'Alices Agent', _v: '' + agreementCount + offeredTerm },       width: 300, height: 200 },
-        { id: 'agreements',   position: { x: 520, y: -200 }, data: { label: 'Agreements', _v: '' + offeredTerm }, width: 350, height: 450 },
-        { id: 'entity-agent', position: { x: entityAgentX, y: 150 }, data: { label: 'Kleindorfers Agent', magnetY: '22%', _v: '' + agreementCount + offeredTerm + agreementDecision }, width: 300, height: 200 },
-        { id: 'entity',       position: { x: 1300, y: 150 }, data: { label: 'Kleindorfers', _v: '' + agreementCount + kleindorfersDataStore.length },       width: 300, height: 400 }
+        { id: 'person',       position: { x: personX,      y: -480 }, data: { label: 'Alice', magnetY: '12%', _v: '' + agreementCount + offeredTerm + aliceDataStore.length },              width: 300, height: 380 },
+        { id: 'person-agent', position: { x: personAgentX, y: 512 }, data: { label: 'Alices Agent', _v: '' + agreementCount + offeredTerm },       width: 300, height: 200 },
+        { id: 'agreements',   position: { x: 560, y: -464 }, data: { label: 'Agreements', _v: '' + offeredTerm }, width: 350, height: 450 },
+        { id: 'entity-agent', position: { x: entityAgentX, y: -480 }, data: { label: 'Kleindorfers Agent', magnetY: '22%', _v: '' + agreementCount + offeredTerm + agreementDecision }, width: 300, height: 200 },
+        { id: 'entity',       position: { x: entityX, y: 192 }, data: { label: 'Kleindorfers', _v: '' + agreementCount + kleindorfersDataStore.length },       width: 300, height: 400 }
       ]}"
       edges="{[
         { id: 'e-p-pa', source: 'person',       target: 'person-agent', sourceHandle: 'bottom', targetHandle: 'top', data: { label: 'delegates personal agency' } },

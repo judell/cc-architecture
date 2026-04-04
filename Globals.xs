@@ -13,7 +13,7 @@ function lookupTermPolicy(term) {
   return 'Reject';
 }
 
-var personX = 50;
-var personAgentX = 420;
-var entityAgentX = 790;
-var entityX = 1200;
+var personX = 64;
+var personAgentX = 240;
+var entityAgentX = 1152;
+var entityX = 1088;
