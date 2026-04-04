@@ -10,6 +10,12 @@
   <style>
     .react-flow__handle { opacity: 0; pointer-events: none; }
   </style>
+  <script>
+    window.decodeBase64 = function(b64) {
+      if (!b64) return '';
+      return decodeURIComponent(escape(atob(b64.replace(/\n/g, ''))));
+    };
+  </script>
 </head>
 <body>
 </body>
