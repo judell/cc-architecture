@@ -32,7 +32,3 @@ The flow of arrows shows delegation of agency (person to agent), proffering of t
 ## Live demo
 
 **https://judell.github.io/myterms/**
-
-## Layout
-
-Node positions are defined in `layout.json` for easy adjustment without changing application code.
