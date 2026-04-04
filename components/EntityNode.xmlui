@@ -15,7 +15,7 @@
     <Text fontSize="$fontSize-small" fontWeight="bold" when="{kleindorfersDataStore.length > 0}">Data Store ({kleindorfersDataStore.length})</Text>
     <Items data="{kleindorfersDataStore}">
       <VStack gap="0">
-        <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-success">✓ {$item.term} with {$item.counterparty}</Text>
+        <Text fontSize="$fontSize-small" fontWeight="bold" color="{$item.term.indexOf('rejected') >= 0 ? '$color-error' : '$color-success'}">{$item.term.indexOf('rejected') >= 0 ? '✗' : '✓'} {$item.term} with {$item.counterparty}</Text>
         <Text fontSize="$fontSize-small" color="$textColor-secondary">{$item.timestamp}</Text>
         <Text fontSize="$fontSize-small" color="$textColor-secondary">{$item.country}</Text>
       </VStack>
