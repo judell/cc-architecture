@@ -1,9 +1,9 @@
 {
   "nodes": {
-    "person":       { "x": 176,  "y": -384, "width": 300, "height": 380 },
-    "person-agent": { "x": 240,  "y": 512,  "width": 300, "height": 200 },
-    "agreements":   { "x": 560,  "y": -288, "width": 350, "height": 450 },
-    "entity-agent": { "x": 1056, "y": -400, "width": 300, "height": 200 },
-    "entity":       { "x": 960,  "y": 256,  "width": 300, "height": 400 }
+    "person":       { "x": 0,    "y": -300, "width": 300, "height": 380 },
+    "person-agent": { "x": 300,  "y": 500,  "width": 300, "height": 200 },
+    "agreements":   { "x": 380,  "y": -150, "width": 350, "height": 450 },
+    "entity-agent": { "x": 850,  "y": -300, "width": 300, "height": 200 },
+    "entity":       { "x": 750,  "y": 400,  "width": 300, "height": 400 }
   }
 }
