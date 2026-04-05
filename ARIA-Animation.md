@@ -1,5 +1,11 @@
 # Animating a Network with ARIA Labels
 
+**Repo:** https://github.com/judell/myterms
+
+**Animation:** https://judell.github.io/myterms/ARIA-Animation.html
+
+**Live demo:** https://judell.github.io/myterms/
+
 ## The question
 
 The MyTerms demo models an IEEE 7012 contract negotiation: Alice selects a term, her agent proffers it, Kleindorfer's agent evaluates it, and if accepted, both parties store the signed agreement. The flow is represented as a React Flow network with five nodes connected by labeled edges like "delegates personal agency", "proffers", "evaluates", "delegates to", and "verifies agreement".
