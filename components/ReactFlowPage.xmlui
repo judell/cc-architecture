@@ -58,13 +58,16 @@ An agreement that indicates you are willing to provide access to specific data u
 
   <DataSource id="layoutData" url="layout.json" onLoaded="{(data) => { layout = data }}" />
 
-  <ChangeListener listenTo="{offeredTerm}" onDidChange="{() => { if (offeredTerm !== '') { pulse = { active: true, edges: ['delegates personal agency', 'proffers', 'delegates to', 'evaluates', 'verifies agreement'], step: 0, currentEdge: '' } } }}" />
+  <ChangeListener listenTo="{offeredTerm}" onDidChange="{() => { if (offeredTerm !== '') { pulse = { active: true, edges: ['delegates to', 'delegates personal agency', 'selects', 'proffers', 'verifies agreement'], step: 0, currentEdge: 'get terms' } } }}" />
 
-  <Timer enabled="{pulse.active}" interval="{1200}" onTick="{() => { if (pulse.step < pulse.edges.length) { canvas.pulseEdge(pulse.edges[pulse.step], 1200); pulse = { active: true, edges: pulse.edges, step: pulse.step + 1, currentEdge: pulse.edges[pulse.step] } } else { canvas.clearPulse(); pulse = { active: false, edges: pulse.edges, step: pulse.step, currentEdge: pulse.currentEdge } } }}" />
+  <Timer enabled="{pulse.active}" interval="{1800}" onTick="{() => { if (pulse.step < pulse.edges.length) { canvas.pulseEdge(pulse.edges[pulse.step], 1800); pulse = { active: true, edges: pulse.edges, step: pulse.step + 1, currentEdge: pulse.edges[pulse.step] } } else { canvas.clearPulse(); pulse = { active: false, edges: pulse.edges, step: pulse.step, currentEdge: pulse.currentEdge } } }}" />
 
-  <ChangeListener listenTo="{pulse.currentEdge}" onDidChange="{() => { if (pulse.currentEdge === 'evaluates' && offeredTerm !== '') { agreementDecision = (kleindorfersTerms.find(function(t) { return t.terms === offeredTerm }) && kleindorfersTerms.find(function(t) { return t.terms === offeredTerm }).policy === 'Accept') ? 'yes' : 'no' } if (pulse.currentEdge === 'verifies agreement' && agreementDecision !== '') { kleindorfersTerms = kleindorfersTerms.map(function(t) { return t.terms === offeredTerm ? { terms: t.terms, policy: agreementDecision === 'yes' ? 'Accept' : 'Reject' } : t }); aliceDataStore = [...aliceDataStore, makeStoreEntry(offeredTerm + ' (' + (agreementDecision === 'yes' ? 'accepted' : 'rejected') + ')', 'Kleindorfers')]; kleindorfersDataStore = [...kleindorfersDataStore, makeStoreEntry(offeredTerm + ' (' + (agreementDecision === 'yes' ? 'accepted' : 'rejected') + ')', 'Alice')]; if (agreementDecision === 'yes') { acceptedCount = acceptedCount + 1; canvas.addEdge('e-signed-' + acceptedCount, 'person', 'entity-agent', 'right-magnet', 'left-magnet', 'signed: ' + offeredTerm + ' ⊂⊃', true) } } }}" />
+  <ChangeListener listenTo="{pulse.currentEdge}" onDidChange="{() => { if (pulse.currentEdge === 'proffers' && offeredTerm !== '') { agreementDecision = (kleindorfersTerms.find(function(t) { return t.terms === offeredTerm }) && kleindorfersTerms.find(function(t) { return t.terms === offeredTerm }).policy === 'Accept') ? 'yes' : 'no' } if (pulse.currentEdge === 'verifies agreement' && agreementDecision !== '') { kleindorfersTerms = kleindorfersTerms.map(function(t) { return t.terms === offeredTerm ? { terms: t.terms, policy: agreementDecision === 'yes' ? 'Accept' : 'Reject' } : t }); aliceDataStore = [...aliceDataStore, makeStoreEntry(offeredTerm + ' (' + (agreementDecision === 'yes' ? 'accepted' : 'rejected') + ')', 'Kleindorfers')]; kleindorfersDataStore = [...kleindorfersDataStore, makeStoreEntry(offeredTerm + ' (' + (agreementDecision === 'yes' ? 'accepted' : 'rejected') + ')', 'Alice')]; if (agreementDecision === 'yes') { acceptedCount = acceptedCount + 1; canvas.addEdge('e-signed-' + acceptedCount, 'person', 'entity-agent', 'right-magnet', 'left-magnet', 'signed: ' + offeredTerm + ' ⊂⊃', true) } } }}" />
 
   <Stack height="calc(100vh - 48px)" width="100%" when="{layout !== null}" position="relative">
+    <HStack padding="$space-2" horizontalAlignment="center" zIndex="10" position="absolute" top="0" left="0" right="0">
+      <Button label="Start" onClick="{() => { offeredTerm = ''; agreementDecision = ''; acceptedCount = 0; aliceDataStore = []; kleindorfersDataStore = []; kleindorfersTerms = [{terms:'SD-BASE',policy:'Accept'},{terms:'PDC-AI',policy:'Reject'}]; canvas.clearPulse(); pulse = { active: true, edges: ['get terms'], step: 0, currentEdge: '' } }}" />
+    </HStack>
     <ReactFlowCanvas id="canvas" marginTop="40px"
       fitView="{true}"
       snapToGrid="{true}"
@@ -81,9 +84,10 @@ An agreement that indicates you are willing to provide access to specific data u
         { id: 'entity',       position: { x: layout.nodes.entity.x,            y: layout.nodes.entity.y },            data: { label: 'Kleindorfers', _v: '' + agreementCount + kleindorfersDataStore.length + pulse.currentEdge + pulse.active },       width: layout.nodes.entity.width,            height: layout.nodes.entity.height }
       ]}"
       edges="{[
+        { id: 'e-p-ag', source: 'person',       target: 'agreements', sourceHandle: 'right-upper', targetHandle: 'left-upper', data: { label: 'get terms' } },
         { id: 'e-p-pa', source: 'person',       target: 'person-agent', sourceHandle: 'bottom', targetHandle: 'top', data: { label: 'delegates personal agency' } },
-        { id: 'e-pa-ag', source: 'person-agent', target: 'agreements', sourceHandle: 'top', targetHandle: 'bottom', data: { label: 'proffers' } },
-        { id: 'e-ag-ea', source: 'agreements', target: 'entity-agent', sourceHandle: 'right-lower', targetHandle: 'left-lower', data: { label: 'evaluates' } },
+        { id: 'e-pa-ag', source: 'person-agent', target: 'agreements', sourceHandle: 'top', targetHandle: 'bottom', data: { label: 'selects' } },
+        { id: 'e-ag-ea', source: 'agreements', target: 'entity-agent', sourceHandle: 'right-lower', targetHandle: 'left-lower', data: { label: 'proffers' } },
         { id: 'e-ea-e', source: 'entity',  target: 'entity-agent',       sourceHandle: 'top', targetHandle: 'bottom', data: { label: 'delegates to' } },
         { id: 'e-ea-verify', source: 'entity-agent', target: 'entity',  sourceHandle: 'right-upper', targetHandle: 'right-upper', data: { label: 'verifies agreement' } }
       ]}"

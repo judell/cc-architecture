@@ -12,8 +12,8 @@
       <SpaceFiller />
       <Icon name="info" tooltip="Help" width="14px" height="14px" color="$color-surface-500" cursor="pointer" onClick="eaHelp.open()" />
     </HStack>
-    <Text fontSize="$fontSize-small" color="$textColor-secondary" when="{offeredTerm === '' || pulseNotReached('evaluates')}">No term offered yet</Text>
-    <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-success" when="{offeredTerm !== '' && pulseReached('evaluates') && lookupTermPolicy(offeredTerm) === 'Accept'}">Accepted: {offeredTerm}</Text>
-    <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-danger" when="{offeredTerm !== '' && pulseReached('evaluates') && lookupTermPolicy(offeredTerm) === 'Reject'}">Rejected: {offeredTerm}</Text>
+    <Text fontSize="$fontSize-small" color="$textColor-secondary" when="{offeredTerm === '' || pulseNotReached('proffers')}">No term offered yet</Text>
+    <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-success" when="{offeredTerm !== '' && pulseReached('proffers') && lookupTermPolicy(offeredTerm) === 'Accept'}">Accepted: {offeredTerm}</Text>
+    <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-danger" when="{offeredTerm !== '' && pulseReached('proffers') && lookupTermPolicy(offeredTerm) === 'Reject'}">Rejected: {offeredTerm}</Text>
   </VStack>
 </Component>

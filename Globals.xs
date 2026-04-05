@@ -14,6 +14,7 @@ function lookupTermPolicy(term) {
 }
 
 function pulseReached(edgeLabel) {
+  if (!pulse.active && pulse.currentEdge === '') return false;
   if (!pulse.active) return true;
   return pulse.edges.indexOf(pulse.currentEdge) > pulse.edges.indexOf(edgeLabel);
 }
