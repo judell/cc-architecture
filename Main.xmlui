@@ -25,7 +25,6 @@
   <AppHeader>
     <Text fontWeight="bold">MyTerms</Text>
     <SpaceFiller />
-    <ViewTrace />
     <Icon name="message-circle-question" tooltip="Help" aria-label="Help" width="20px" height="20px" color="$color-surface-500" cursor="pointer" onClick="helpDialog.open()" />
     <Inspector />
   </AppHeader>

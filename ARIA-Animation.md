@@ -100,7 +100,45 @@ The DOM animation worked. But choreographing the network, making nodes react whe
 
 The original pulse API used `setTimeout` to step through edges and emit events. The XMLUI framework has its own reactive system: globals, ChangeListeners, and expressions that re-evaluate when dependencies change. Setting a global like `pulseCurrentEdge = 'evaluates'` from inside a `setTimeout` callback didn't trigger XMLUI's reactive updates. The event fired, the callback executed, but the ChangeListener never saw the change.
 
-The diagnostic was revealing. XMLUI's semantic tracing ([full trace](xs-trace-diagnostic.json)) showed that the `onPulseStep` callback was being called for all five edges — the console confirmed the function existed and returned normally. But the ChangeListener on `pulseCurrentEdge` never fired for "evaluates" or "verifies agreement". Three edges worked, two didn't. The differentiating factor: the three that worked triggered no state changes, while the two that failed were the ones whose ChangeListener conditions matched and tried to set globals.
+The diagnostic was revealing. XMLUI's semantic tracing showed that the `onPulseStep` callback was being called for all five edges — the console confirmed the function existed and returned normally. But the ChangeListener on `pulseCurrentEdge` never fired for "evaluates" or "verifies agreement". Three edges worked, two didn't. The differentiating factor: the three that worked triggered no state changes, while the two that failed were the ones whose ChangeListener conditions matched and tried to set globals.
+
+Here's the curated trace from the working Timer-based solution, showing the pulse stepping through all five edges with state changes triggered at the right moments:
+
+```
+select SD-BASE
+  offeredTerm: "" → "SD-BASE"
+
+pulse step 0
+  pulseCurrentEdge: "" → "delegates personal agency"
+  canvas.pulseEdge("delegates personal agency", 1200)
+
+pulse step 1
+  pulseCurrentEdge: "delegates personal agency" → "proffers"
+  canvas.pulseEdge("proffers", 1200)
+
+pulse step 2
+  pulseCurrentEdge: "proffers" → "evaluates"
+  agreementDecision: "" → "yes"                        ← KA reacts
+  canvas.pulseEdge("evaluates", 1200)
+
+pulse step 3
+  pulseCurrentEdge: "evaluates" → "delegates to"
+  canvas.pulseEdge("delegates to", 1200)
+
+pulse step 4
+  pulseCurrentEdge: "delegates to" → "verifies agreement"
+  aliceDataStore: [] → [SD-BASE (accepted)]            ← data stores update
+  kleindorfersDataStore: [] → [SD-BASE (accepted)]
+  acceptedCount: 0 → 1
+  canvas.addEdge("e-signed-1", "signed: SD-BASE ⊂⊃")  ← signed edge appears
+  canvas.pulseEdge("verifies agreement", 1200)
+
+pulse complete
+  pulseActive: true → false
+  canvas.clearPulse()
+```
+
+Each line is a semantic event extracted from the XMLUI trace. The key insight: "evaluates" triggers `agreementDecision` and "verifies agreement" triggers the data store updates — both synchronized to the pulse arrival, not fired immediately on term selection.
 
 XMLUI's built-in `edgeInfoClick` handler worked fine because it fired synchronously from a user click. The pulse events fired asynchronously from `setTimeout`, outside the reactive transaction context.
 
