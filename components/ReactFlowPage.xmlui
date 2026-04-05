@@ -58,11 +58,13 @@ An agreement that indicates you are willing to provide access to specific data u
 
   <DataSource id="layoutData" url="layout.json" onLoaded="{(data) => { layout = data }}" />
 
-  <ChangeListener listenTo="{offeredTerm}" onDidChange="{() => { if (offeredTerm !== '') { const match = kleindorfersTerms.find(function(t) { return t.terms === offeredTerm }); agreementDecision = (match && match.policy === 'Accept') ? 'yes' : 'no'; agreementCount = agreementCount + 1 } }}" />
+  <ChangeListener listenTo="{offeredTerm}" onDidChange="{() => { if (offeredTerm !== '') { pulseEdges = ['delegates personal agency', 'proffers', 'evaluates', 'delegates to', 'verifies agreement']; pulseStep = 0; pulseActive = true } }}" />
 
-  <ChangeListener listenTo="{agreementCount}" onDidChange="{() => { if (agreementDecision !== '') { kleindorfersTerms = kleindorfersTerms.map(function(t) { return t.terms === offeredTerm ? { terms: t.terms, policy: agreementDecision === 'yes' ? 'Accept' : 'Reject' } : t }); aliceDataStore = [...aliceDataStore, makeStoreEntry(offeredTerm + ' (' + (agreementDecision === 'yes' ? 'accepted' : 'rejected') + ')', 'Kleindorfers')]; kleindorfersDataStore = [...kleindorfersDataStore, makeStoreEntry(offeredTerm + ' (' + (agreementDecision === 'yes' ? 'accepted' : 'rejected') + ')', 'Alice')]; if (agreementDecision === 'yes') { acceptedCount = acceptedCount + 1; canvas.addEdge('e-signed-' + acceptedCount, 'person', 'entity-agent', 'right-magnet', 'left-magnet', 'signed: ' + offeredTerm + ' ⊂⊃', true) } } }}" />
+  <Timer enabled="{pulseActive}" interval="{1200}" onTick="{() => { if (pulseStep < pulseEdges.length) { pulseCurrentEdge = pulseEdges[pulseStep]; canvas.pulseEdge(pulseEdges[pulseStep], 1200); pulseStep = pulseStep + 1 } else { pulseActive = false; canvas.clearPulse() } }}" />
 
-  <Stack height="calc(100vh - 48px)" width="100%" when="{layout !== null}">
+  <ChangeListener listenTo="{pulseCurrentEdge}" onDidChange="{() => { if (pulseCurrentEdge === 'evaluates' && offeredTerm !== '') { agreementDecision = (kleindorfersTerms.find(function(t) { return t.terms === offeredTerm }) && kleindorfersTerms.find(function(t) { return t.terms === offeredTerm }).policy === 'Accept') ? 'yes' : 'no' } if (pulseCurrentEdge === 'verifies agreement' && agreementDecision !== '') { kleindorfersTerms = kleindorfersTerms.map(function(t) { return t.terms === offeredTerm ? { terms: t.terms, policy: agreementDecision === 'yes' ? 'Accept' : 'Reject' } : t }); aliceDataStore = [...aliceDataStore, makeStoreEntry(offeredTerm + ' (' + (agreementDecision === 'yes' ? 'accepted' : 'rejected') + ')', 'Kleindorfers')]; kleindorfersDataStore = [...kleindorfersDataStore, makeStoreEntry(offeredTerm + ' (' + (agreementDecision === 'yes' ? 'accepted' : 'rejected') + ')', 'Alice')]; if (agreementDecision === 'yes') { acceptedCount = acceptedCount + 1; canvas.addEdge('e-signed-' + acceptedCount, 'person', 'entity-agent', 'right-magnet', 'left-magnet', 'signed: ' + offeredTerm + ' ⊂⊃', true) } } }}" />
+
+  <Stack height="calc(100vh - 48px)" width="100%" when="{layout !== null}" position="relative">
     <ReactFlowCanvas id="canvas" marginTop="40px"
       fitView="{true}"
       snapToGrid="{true}"
@@ -82,8 +84,8 @@ An agreement that indicates you are willing to provide access to specific data u
         { id: 'e-p-pa', source: 'person',       target: 'person-agent', sourceHandle: 'bottom', targetHandle: 'top', data: { label: 'delegates personal agency' } },
         { id: 'e-pa-ag', source: 'person-agent', target: 'agreements', sourceHandle: 'top', targetHandle: 'bottom', data: { label: 'proffers' } },
         { id: 'e-ag-ea', source: 'agreements', target: 'entity-agent', sourceHandle: 'right-lower', targetHandle: 'left-lower', data: { label: 'evaluates' } },
-        { id: 'e-ea-e', source: 'entity',  target: 'entity-agent',       sourceHandle: 'right-upper', targetHandle: 'right-upper', data: { label: 'delegates to' } },
-        { id: 'e-ea-verify', source: 'entity-agent', target: 'entity',  sourceHandle: 'bottom', targetHandle: 'top', data: { label: 'verifies agreement' } }
+        { id: 'e-ea-e', source: 'entity',  target: 'entity-agent',       sourceHandle: 'top', targetHandle: 'bottom', data: { label: 'delegates to' } },
+        { id: 'e-ea-verify', source: 'entity-agent', target: 'entity',  sourceHandle: 'right-upper', targetHandle: 'right-upper', data: { label: 'verifies agreement' } }
       ]}"
     >
       <PersonNode />
