@@ -1,0 +1,9 @@
+<Component name="ViewTrace">
+  <DataSource id="traceData" url="xs-trace-diagnostic.json" dataType="text" />
+  <variable name="fence" value="{'```'}" />
+  <variable name="formatted" value="{fence + 'json\n' + traceData.value + '\n' + fence}" />
+  <ModalDialog id="traceModal" title="Diagnostic Trace" maxWidth="80vw">
+    <Markdown content="{formatted}" fontSize="$fontSize-sm" />
+  </ModalDialog>
+  <Button label="View trace" size="sm" onClick="traceModal.open()" />
+</Component>
