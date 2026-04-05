@@ -8,7 +8,7 @@
       <SpaceFiller />
       <Icon name="info" tooltip="Help" width="14px" height="14px" color="$color-surface-500" cursor="pointer" onClick="paHelp.open()" />
     </HStack>
-    <Text fontSize="$fontSize-small" color="$textColor-secondary" when="{offeredTerm === '' || (pulse.active && pulse.edges.indexOf(pulse.currentEdge) <= pulse.edges.indexOf('delegates personal agency'))}">Waiting for term...</Text>
-    <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-primary" when="{offeredTerm !== '' && (!pulse.active || pulse.edges.indexOf(pulse.currentEdge) > pulse.edges.indexOf('delegates personal agency'))}">Received: {offeredTerm}</Text>
+    <Text fontSize="$fontSize-small" color="$textColor-secondary" when="{offeredTerm === '' || pulseNotReached('delegates personal agency')}">Waiting for term...</Text>
+    <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-primary" when="{offeredTerm !== '' && pulseReached('delegates personal agency')}">Received: {offeredTerm}</Text>
   </VStack>
 </Component>

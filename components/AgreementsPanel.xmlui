@@ -10,6 +10,6 @@
       <Text fontWeight="bold" fontSize="$fontSize-small">PDC-AI</Text>
       <Text fontSize="$fontSize-small">An agreement that indicates you are willing to provide access to specific data under your control for the purposes of Training and Operating AI technologies.</Text>
     </VStack>
-    <Text fontSize="$fontSize-small" fontWeight="bold" when="{offeredTerm !== '' && (!pulse.active || pulse.edges.indexOf(pulse.currentEdge) > pulse.edges.indexOf('proffers'))}">Proffered: {offeredTerm}</Text>
+    <Text fontSize="$fontSize-small" fontWeight="bold" when="{offeredTerm !== '' && pulseReached('proffers')}">Proffered: {offeredTerm}</Text>
   </VStack>
 </Component>

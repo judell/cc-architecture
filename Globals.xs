@@ -13,4 +13,13 @@ function lookupTermPolicy(term) {
   return 'Reject';
 }
 
+function pulseReached(edgeLabel) {
+  if (!pulse.active) return true;
+  return pulse.edges.indexOf(pulse.currentEdge) > pulse.edges.indexOf(edgeLabel);
+}
+
+function pulseNotReached(edgeLabel) {
+  return !pulseReached(edgeLabel);
+}
+
 var layout = null;
