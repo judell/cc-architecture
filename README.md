@@ -31,12 +31,12 @@ The flow of arrows shows delegation of agency (person to agent), proffering of t
 
 ## Live demo
 
-https://judell.github.io/myterms/
+[https://judell.github.io/myterms/](https://judell.github.io/myterms/)
 
 ## Repo
 
-https://github.com/judell/myterms
+[https://github.com/judell/myterms](https://github.com/judell/myterms)
 
 ## Animation
 
-https://github.com/judell/myterms/blob/main/ARIA-Animation.md
+[https://github.com/judell/myterms/blob/main/ARIA-Animation.md](https://github.com/judell/myterms/blob/main/ARIA-Animation.md)
