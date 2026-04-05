@@ -18,7 +18,7 @@
 
   <Theme maxWidth-ModalDialog="90%" maxHeight-ModalDialog="90vh">
   <ModalDialog id="helpDialog" showCloseButton="true">
-    <Markdown when="{readmeData.value}" content="{window.decodeBase64(readmeData.value.content)}" fontSize="$fontSize-sm" lineHeight="1.3" padding="0" margin="0" />
+    <Markdown when="{readmeData.value}" content="{window.decodeBase64(readmeData.value.content)}" fontSize="$fontSize-sm" lineHeight="1.3" padding="0" margin="0" openLinkInNewTab="{true}" />
   </ModalDialog>
   </Theme>
 
