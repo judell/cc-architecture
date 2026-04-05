@@ -77,7 +77,7 @@ An agreement that indicates you are willing to provide access to specific data u
       showMinimap="{false}"
       showControls="{true}"
       showBackground="{true}"
-      storageKey="contract-flow"
+
       onEdgeInfoClick="{(e) => { if (e.edgeId === 'e-pa-ea') { agreementsDialog.open() } else if (e.edgeId === 'e-signed') { auditTrailDialog.open() } else { edgeLabel = e.label; edgeId = e.edgeId; edgeInfoDialog.open() } }}"
       nodes="{[
         { id: 'person',       position: { x: layout.nodes.person.x,            y: layout.nodes.person.y },            data: { label: 'Alice', magnetY: '12%', _v: '' + agreementCount + offeredTerm + aliceDataStore.length + pulse.currentEdge + pulse.active },              width: layout.nodes.person.width,            height: layout.nodes.person.height },
