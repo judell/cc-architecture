@@ -58,15 +58,16 @@ An agreement that indicates you are willing to provide access to specific data u
 
   <DataSource id="layoutData" url="layout.json" onLoaded="{(data) => { layout = data }}" />
 
-  <ChangeListener listenTo="{offeredTerm}" onDidChange="{() => { if (offeredTerm !== '') { pulse = { active: true, edges: ['delegates to', 'delegates personal agency', 'selects', 'proffers', 'verifies agreement'], step: 0, currentEdge: 'get terms' } } }}" />
+  <ChangeListener listenTo="{offeredTerm}" onDidChange="{() => { if (offeredTerm !== '') { phase = 3; pulse = { active: true, edges: ['selects', 'proffers', 'verifies agreement'], step: 0, currentEdge: 'get terms' } } }}" />
 
   <Timer enabled="{pulse.active}" interval="{1800}" onTick="{() => { if (pulse.step < pulse.edges.length) { canvas.pulseEdge(pulse.edges[pulse.step], 1800); pulse = { active: true, edges: pulse.edges, step: pulse.step + 1, currentEdge: pulse.edges[pulse.step] } } else { canvas.clearPulse(); pulse = { active: false, edges: pulse.edges, step: pulse.step, currentEdge: pulse.currentEdge } } }}" />
 
-  <ChangeListener listenTo="{pulse.currentEdge}" onDidChange="{() => { if (pulse.currentEdge === 'proffers' && offeredTerm !== '') { agreementDecision = (kleindorfersTerms.find(function(t) { return t.terms === offeredTerm }) && kleindorfersTerms.find(function(t) { return t.terms === offeredTerm }).policy === 'Accept') ? 'yes' : 'no' } if (pulse.currentEdge === 'verifies agreement' && agreementDecision !== '') { kleindorfersTerms = kleindorfersTerms.map(function(t) { return t.terms === offeredTerm ? { terms: t.terms, policy: agreementDecision === 'yes' ? 'Accept' : 'Reject' } : t }); aliceDataStore = [...aliceDataStore, makeStoreEntry(offeredTerm + ' (' + (agreementDecision === 'yes' ? 'accepted' : 'rejected') + ')', 'Kleindorfers')]; kleindorfersDataStore = [...kleindorfersDataStore, makeStoreEntry(offeredTerm + ' (' + (agreementDecision === 'yes' ? 'accepted' : 'rejected') + ')', 'Alice')]; if (agreementDecision === 'yes') { acceptedCount = acceptedCount + 1; canvas.addEdge('e-signed-' + acceptedCount, 'person', 'entity-agent', 'right-magnet', 'left-magnet', 'signed: ' + offeredTerm + ' ⊂⊃', true) } } }}" />
+  <ChangeListener listenTo="{pulse.currentEdge}" onDidChange="{(change) => onPulseEdgeChange(change)}" />
 
   <Stack height="calc(100vh - 48px)" width="100%" when="{layout !== null}" position="relative">
     <HStack padding="$space-2" horizontalAlignment="center" zIndex="10" position="absolute" top="0" left="0" right="0">
-      <Button label="Start" onClick="{() => { offeredTerm = ''; agreementDecision = ''; acceptedCount = 0; aliceDataStore = []; kleindorfersDataStore = []; kleindorfersTerms = [{terms:'SD-BASE',policy:'Accept'},{terms:'PDC-AI',policy:'Reject'}]; canvas.clearPulse(); pulse = { active: true, edges: ['get terms'], step: 0, currentEdge: '' } }}" />
+      <Button label="Delegate" when="{phase === 0}" onClick="{() => { offeredTerm = ''; agreementDecision = ''; acceptedCount = 0; aliceDataStore = []; kleindorfersDataStore = []; kleindorfersTerms = [{terms:'SD-BASE',policy:'Accept'},{terms:'PDC-AI',policy:'Reject'}]; canvas.clearPulse(); phase = 1; pulse = { active: true, edges: ['delegates to', 'delegates personal agency'], step: 0, currentEdge: '' } }}" />
+      <Button label="Start" when="{phase === 1 && !pulse.active}" onClick="{() => { phase = 2; pulse = { active: true, edges: ['get terms'], step: 0, currentEdge: '' } }}" />
     </HStack>
     <ReactFlowCanvas id="canvas" marginTop="40px"
       fitView="{true}"

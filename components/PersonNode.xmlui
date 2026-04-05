@@ -12,7 +12,7 @@
       <Icon name="info" tooltip="Help" width="14px" height="14px" color="$color-surface-500" cursor="pointer" onClick="personHelp.open()" />
       <Text fontSize="2rem" color="$color-primary" cursor="pointer" onClick="personMagnet.open()">⊂</Text>
     </HStack>
-    <Select placeholder="Choose a term..." onDidChange="{(val) => { offeredTerm = val }}" when="{!pulse.active && pulse.currentEdge === 'get terms'}">
+    <Select placeholder="Choose a term..." onDidChange="{(val) => { offeredTerm = val }}" when="{phase === 2 && !pulse.active}">
       <Option value="SD-BASE" label="SD-BASE" />
       <Option value="PDC-AI" label="PDC-AI" />
     </Select>
