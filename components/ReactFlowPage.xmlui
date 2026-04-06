@@ -137,6 +137,7 @@ An agreement that indicates you are willing to provide access to specific data u
     position="relative">
     <ReactFlowCanvas
       id="canvas"
+      fontSize="{20}"
       fitView="{true}"
       fitViewPadding="{.2}"
       snapToGrid="{true}"
