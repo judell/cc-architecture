@@ -5,10 +5,9 @@
     </Text>
   </ModalDialog>
   <VStack gap="$space-1" padding="$space-2">
-    <HStack verticalAlignment="center">
-      <Text fontWeight="bold">
-        Alice's Agent
-      </Text>
+    <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
+      <Icon name="bot" width="24px" height="24px" />
+      <Text fontWeight="bold" fontSize="$fontSize-lg">Alice's Agent</Text>
     </HStack>
     <Text
       fontSize="$fontSize-small"

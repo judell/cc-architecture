@@ -5,12 +5,11 @@
     </Text>
   </ModalDialog>
   <VStack gap="$space-1" padding="$space-2">
-    <HStack verticalAlignment="center">
-      <Text fontWeight="bold">
-        Kleindorfer's
-      </Text>
+    <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
+      <Icon name="building2" width="24px" height="24px" />
+      <Text fontWeight="bold" fontSize="$fontSize-lg">Kleindorfer's</Text>
     </HStack>
-    <Table data="{kleindorfersTerms}" fontSize="$fontSize-small" height="100px">
+    <Table data="{kleindorfersTerms}" fontSize="$fontSize-small">
       <Column bindTo="terms" header="Terms" />
       <Column header="Policy">
         <Text>{$item.policy === 'Accept' ? '✅ Accept' : '❌ Reject'}</Text>

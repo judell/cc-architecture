@@ -1,6 +1,6 @@
 <Component name="AgreementsPanel">
-  <VStack gap="$space-2" padding="$space-2">
-    <Text fontWeight="bold">
+  <VStack gap="$space-2" padding="$space-2" fontSize="$fontSize-sm">
+    <Text fontWeight="bold" textAlign="center">
       Possible MyTerms Agreements
     </Text>
     <Text fontSize="$fontSize-small" color="$textColor-secondary">

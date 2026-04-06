@@ -7,6 +7,9 @@
   "resources": {
     "icon.message-circle-question": "icons/message-circle-question.svg",
     "icon.info": "icons/info.svg",
-    "icon.save": "icons/save.svg"
+    "icon.save": "icons/save.svg",
+    "icon.bot": "icons/bot.svg",
+    "icon.person": "icons/person.svg",
+    "icon.building2": "icons/building2.svg"
   }
 }

@@ -6,9 +6,12 @@
     <Text>This magnet represents the entity agent acceptance criteria. When attracted, it confirms the entity willingness to bind to the offered terms.</Text>
   </ModalDialog>
   <VStack gap="$space-1" padding="$space-2">
-    <HStack verticalAlignment="center">
+    <HStack horizontalAlignment="start">
       <Text fontSize="2rem" color="$color-primary" cursor="pointer" onClick="eaMagnet.open()">⊃</Text>
-      <Text fontWeight="bold" fontSize="$fontSize-small">Kleindorfer's Agent</Text>
+    </HStack>
+    <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
+      <Icon name="bot" width="24px" height="24px" />
+      <Text fontWeight="bold" fontSize="$fontSize-lg">Kleindorfer's Agent</Text>
     </HStack>
     <Text fontSize="$fontSize-small" color="$textColor-secondary" when="{phase < 6}">No term offered yet</Text>
     <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-primary" when="{phase >= 6 && phase < 8}">Received: {offeredTerm}</Text>

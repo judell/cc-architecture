@@ -10,11 +10,7 @@
     </Text>
   </ModalDialog>
   <VStack gap="$space-1" padding="$space-2">
-    <HStack verticalAlignment="center">
-      <Text fontWeight="bold">
-        Alice
-      </Text>
-      <SpaceFiller />
+    <HStack horizontalAlignment="end">
       <Text
         fontSize="2rem"
         color="$color-primary"
@@ -22,6 +18,10 @@
         onClick="personMagnet.open()">
         ⊂
       </Text>
+    </HStack>
+    <HStack horizontalAlignment="center" verticalAlignment="center" gap="$space-2">
+      <Icon name="person" width="24px" height="24px" />
+      <Text fontWeight="bold" fontSize="$fontSize-lg">Alice</Text>
     </HStack>
     <Select
       placeholder="Choose a term..."
