@@ -1,26 +1,7 @@
 <Component name="ControlNode">
   <Button
-    label="Delegate"
-    when="{phase === 0}"
-    onClick="delegate()" />
-  <Button
-    label="Lookup"
-    when="{phase === 1 && !pulse.active}"
-    onClick="getTerms()" />
-  <Button
-    label="Proffer"
-    when="{phase === 4}"
-    onClick="proffer()" />
-  <Button
-    label="Consult Policy"
-    when="{phase === 6}"
-    onClick="applyPolicy()" />
-  <Button
-    label="Verify"
-    when="{phase === 8}"
-    onClick="agree()" />
-  <Button
-    label="Start Over"
-    when="{phase === 10}"
-    onClick="startOver()" />
+    label="{buttonLabel}"
+    enabled="{buttonEnabled}"
+    when="{buttonLabel !== ''}"
+    onClick="nextStep()" />
 </Component>

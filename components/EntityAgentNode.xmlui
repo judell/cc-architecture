@@ -13,9 +13,9 @@
       <Icon name="bot" width="24px" height="24px" />
       <Text fontWeight="bold" fontSize="$fontSize-lg">Kleindorfer's Agent</Text>
     </HStack>
-    <Text fontSize="$fontSize-small" color="$textColor-secondary" when="{phase < 6}">No term offered yet</Text>
-    <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-primary" when="{phase >= 6 && phase < 8}">Received: {offeredTerm}</Text>
-    <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-success" when="{phase >= 8 && lookupTermPolicy(offeredTerm) === 'Accept'}">Accepted: {offeredTerm}</Text>
-    <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-danger" when="{phase >= 8 && lookupTermPolicy(offeredTerm) === 'Reject'}">Rejected: {offeredTerm}</Text>
+    <Text fontSize="$fontSize-small" color="$textColor-secondary" when="{phase < 5}">No term offered yet</Text>
+    <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-primary" when="{phase >= 5 && phase < 6}">Received: {offeredTerm}</Text>
+    <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-success" when="{phase >= 6 && lookupTermPolicy(offeredTerm) === 'Accept'}">Accepted: {offeredTerm}</Text>
+    <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-danger" when="{phase >= 6 && lookupTermPolicy(offeredTerm) === 'Reject'}">Rejected: {offeredTerm}</Text>
   </VStack>
 </Component>

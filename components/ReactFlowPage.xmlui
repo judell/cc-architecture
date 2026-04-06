@@ -105,7 +105,7 @@ An agreement that indicates you are willing to provide access to specific data u
 
   <ChangeListener
     listenTo="{pulse.active}"
-    onDidChange="{() => { if (!pulse.active && phase === 'sending') { cleanupSendEdge(); phase = 4; phaseLabel = '4'; phaseMessage = 'Alice\u0027s agent proffers agreement' } if (!pulse.active && phase === 5) { phase = 6; phaseLabel = '6'; phaseMessage = 'Kleindorfer\u0027s agent consults policy' } }}" />
+    onDidChange="{() => { if (!pulse.active && phase === 'sending') { cleanupSendEdge(); phase = 4; phaseLabel = '4'; phaseMessage = 'Alice\u0027s agent proffers agreement'; buttonLabel = 'Proffer'; buttonEnabled = true } if (!pulse.active && phase === 'proffering') { phase = 5; phaseLabel = '5'; phaseMessage = 'Kleindorfer\u0027s agent consults policy'; buttonLabel = 'Consult Policy'; buttonEnabled = true } }}" />
 
   <ChangeListener
     listenTo="{offeredTerm}"
@@ -123,7 +123,7 @@ An agreement that indicates you are willing to provide access to specific data u
   <Timer
     enabled="{phase === 'delegating'}"
     interval="{pulseDuration}"
-    onTick="{() => { phase = 1; phaseLabel = '2'; phaseMessage = 'Alice looks up terms' }}" />
+    onTick="{() => { phase = 1; phaseLabel = '2'; phaseMessage = 'Alice looks up terms'; buttonLabel = 'Lookup'; buttonEnabled = true }}" />
 
   <Timer
     enabled="{roundTrip !== ''}"
@@ -145,7 +145,7 @@ An agreement that indicates you are willing to provide access to specific data u
       showControls="{true}"
       showBackground="{true}"
       onEdgeInfoClick="{(e) => { if (e.edgeId === 'e-pa-ea') { agreementsDialog.open() } else if (e.edgeId === 'e-signed') { auditTrailDialog.open() } else { edgeLabel = e.label; edgeId = e.edgeId; edgeInfoDialog.open() } }}"
-      nodes="{(phase, phaseLabel, phaseMessage, pulse.active, pulse.currentEdge, offeredTerm, agreementDecision, agreementCount, acceptedCount, aliceDataStore.length, kleindorfersDataStore.length, getNodes())}"
+      nodes="{(phase, phaseLabel, phaseMessage, buttonLabel, buttonEnabled, pulse.active, pulse.currentEdge, offeredTerm, agreementDecision, agreementCount, acceptedCount, aliceDataStore.length, kleindorfersDataStore.length, getNodes())}"
       edges="{getEdges()}">
       <PersonNode />
       <PersonAgentNode />

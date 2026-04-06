@@ -44,6 +44,15 @@ function onPulseEdgeChange(change) {
   }
 }
 
+function nextStep() {
+  if (phase === 0) delegate();
+  else if (phase === 1) getTerms();
+  else if (phase === 4) proffer();
+  else if (phase === 5) applyPolicy();
+  else if (phase === 6) agree();
+  else if (phase === 7) startOver();
+}
+
 function delegate() {
   offeredTerm = "";
   agreementDecision = "";
@@ -58,12 +67,14 @@ function delegate() {
   window.__reactFlowCanvasApi.pulseEdge("delegates agency", pulseDuration);
   window.__reactFlowCanvasApi.pulseEdge("delegates personal agency", pulseDuration);
   phase = "delegating";
+  buttonEnabled = false;
 }
 
 function getTerms() {
   phase = 2;
   phaseLabel = '2';
   phaseMessage = 'Alice looks up terms';
+  buttonEnabled = false;
   const api = window.__reactFlowCanvasApi;
   api.addEdge('e-p-ag', 'person', 'agreements', 'right-top', 'left-top', 'lookup');
   api.pulseEdgeRoundTrip('lookup', pulseDuration);
@@ -72,8 +83,7 @@ function getTerms() {
 
 function sendTerm() {
   phase = 'sending';
-  phaseLabel = '3';
-  phaseMessage = 'Alice sends term to agent';
+  buttonEnabled = false;
   const api = window.__reactFlowCanvasApi;
   api.addEdge('e-p-pa-send', 'person', 'person-agent', 'bottom-right', 'top-right', 'send', false, { labelPosition: 60 });
   pulse = { active: true, edges: ['send'], step: 0, currentEdge: 'lookup' };
@@ -84,16 +94,14 @@ function cleanupSendEdge() {
 }
 
 function proffer() {
-  phase = 5;
-  phaseLabel = '5';
-  phaseMessage = 'Proffering agreement';
+  phase = 'proffering';
+  buttonEnabled = false;
   pulse = { active: true, edges: ['proffers'], step: 0, currentEdge: 'lookup' };
 }
 
 function applyPolicy() {
-  phase = 7;
-  phaseLabel = '7';
-  phaseMessage = 'Consulting policy';
+  phase = 'consulting';
+  buttonEnabled = false;
   const api = window.__reactFlowCanvasApi;
   api.addEdge('e-ea-consult', 'entity-agent', 'entity', 'bottom-left', 'top-left', 'consults policy');
   api.pulseEdgeRoundTrip('consults policy', pulseDuration);
@@ -106,17 +114,23 @@ function onRoundTripComplete() {
     phase = 3;
     phaseLabel = '3';
     phaseMessage = "Choose a term from Alice's list";
+    buttonLabel = '';
+    buttonEnabled = false;
   }
   if (roundTrip === 'consults policy') {
     window.__reactFlowCanvasApi.removeEdge('e-ea-consult');
     if (agreementDecision === 'yes') {
-      phase = 8;
-      phaseLabel = '8';
+      phase = 6;
+      phaseLabel = '6';
       phaseMessage = "Kleindorfer's agent verifies agreement";
+      buttonLabel = 'Verify';
+      buttonEnabled = true;
     } else {
-      phase = 10;
+      phase = 7;
       phaseLabel = '';
       phaseMessage = 'Agreement rejected';
+      buttonLabel = 'Start Over';
+      buttonEnabled = true;
     }
   }
   if (roundTrip === 'verifies agreement') {
@@ -130,17 +144,18 @@ function onRoundTripComplete() {
       acceptedCount = acceptedCount + 1;
       window.__reactFlowCanvasApi.addEdge('e-signed-' + acceptedCount, 'person', 'entity-agent', 'right-magnet', 'left-magnet', 'signed: ' + offeredTerm + ' \u2282\u2283', true);
     }
-    phase = 10;
+    phase = 7;
     phaseLabel = '';
     phaseMessage = agreementDecision === 'yes' ? 'Agreement signed and posted to ledger' : 'Agreement rejected';
+    buttonLabel = 'Start Over';
+    buttonEnabled = true;
   }
   roundTrip = '';
 }
 
 function agree() {
-  phase = 9;
-  phaseLabel = '9';
-  phaseMessage = 'Verifying agreement';
+  phase = 'verifying';
+  buttonEnabled = false;
   const api = window.__reactFlowCanvasApi;
   api.addEdge('e-ea-verify', 'entity-agent', 'entity', 'bottom-left', 'top-left', 'verifies agreement', false, { labelPosition: 30 });
   api.pulseEdge('verifies agreement', pulseDuration * 2);
@@ -166,6 +181,8 @@ function startOver() {
   phase = 0;
   phaseLabel = '1';
   phaseMessage = "Alice and Kleindorfer's delegate agency";
+  buttonLabel = 'Delegate';
+  buttonEnabled = true;
 }
 
 function saveLayout() {
