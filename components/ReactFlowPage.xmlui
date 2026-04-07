@@ -105,7 +105,7 @@ An agreement that indicates you are willing to provide access to specific data u
 
   <ChangeListener
     listenTo="{pulse.active}"
-    onDidChange="{() => { if (!pulse.active && phase === 'sending') { cleanupSendEdge(); phase = 4; phaseLabel = '4'; phaseMessage = 'Alice\u0027s agent proffers agreement'; buttonLabel = 'Proffer'; buttonEnabled = true } if (!pulse.active && phase === 'proffering') { phase = 5; phaseLabel = '5'; phaseMessage = 'Kleindorfer\u0027s agent consults policy'; buttonLabel = 'Consult Policy'; buttonEnabled = true } }}" />
+    onDidChange="{() => { if (!pulse.active && phase === 'sending') { cleanupSendEdge(); phase = 4; phaseLabel = stepLabel(4); phaseMessage = 'Alice\u0027s agent proffers agreement'; buttonLabel = 'Proffer'; buttonEnabled = true } if (!pulse.active && phase === 'proffering') { phase = 5; phaseLabel = stepLabel(5); phaseMessage = 'Kleindorfer\u0027s agent consults policy'; buttonLabel = 'Consult Policy'; buttonEnabled = true } }}" />
 
   <ChangeListener
     listenTo="{offeredTerm}"
@@ -123,7 +123,7 @@ An agreement that indicates you are willing to provide access to specific data u
   <Timer
     enabled="{phase === 'delegating'}"
     interval="{pulseDuration}"
-    onTick="{() => { phase = 1; phaseLabel = '2'; phaseMessage = 'Alice looks up terms'; buttonLabel = 'Lookup'; buttonEnabled = true }}" />
+    onTick="{() => { phase = 1; phaseLabel = stepLabel(2); phaseMessage = 'Alice looks up terms'; buttonLabel = 'Lookup'; buttonEnabled = true }}" />
 
   <Timer
     enabled="{roundTrip !== ''}"

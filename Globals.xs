@@ -64,13 +64,14 @@ function delegate() {
   window.__reactFlowCanvasApi.clearPulse();
   window.__reactFlowCanvasApi.pulseEdge("delegates agency", pulseDuration);
   window.__reactFlowCanvasApi.pulseEdge("delegates personal agency", pulseDuration);
+  hasDelegated = true;
   phase = "delegating";
   buttonEnabled = false;
 }
 
 function getTerms() {
   phase = 2;
-  phaseLabel = '2';
+  phaseLabel = stepLabel(2);
   phaseMessage = 'Alice looks up terms';
   buttonEnabled = false;
   const api = window.__reactFlowCanvasApi;
@@ -110,7 +111,7 @@ function onRoundTripComplete() {
   if (roundTrip === 'lookup') {
     window.__reactFlowCanvasApi.removeEdge('e-p-ag');
     phase = 3;
-    phaseLabel = '3';
+    phaseLabel = stepLabel(3);
     phaseMessage = "Choose a term from Alice's list";
     buttonLabel = '';
     buttonEnabled = false;
@@ -119,7 +120,7 @@ function onRoundTripComplete() {
     window.__reactFlowCanvasApi.removeEdge('e-ea-consult');
     if (agreementDecision === 'yes') {
       phase = 6;
-      phaseLabel = '6';
+      phaseLabel = stepLabel(6);
       phaseMessage = "Kleindorfer's agent verifies agreement";
       buttonLabel = 'Verify';
       buttonEnabled = true;
@@ -127,7 +128,7 @@ function onRoundTripComplete() {
       alicePersonalDataStore = [...alicePersonalDataStore, makeStoreEntry(offeredTerm + ' (rejected)', "Kleindorfer's")];
       kleindorfersOrgDataStore = [...kleindorfersOrgDataStore, makeStoreEntry(offeredTerm + ' (rejected)', 'Alice')];
       phase = 7;
-      phaseLabel = '6';
+      phaseLabel = stepLabel(6);
       phaseMessage = 'Agreement rejected';
       buttonLabel = 'Start Over';
       buttonEnabled = true;
@@ -146,7 +147,7 @@ function onRoundTripComplete() {
       window.__reactFlowCanvasApi.addEdge('e-signed-' + acceptedCount, 'person', 'entity-agent', 'right-magnet', 'left-magnet', 'signed: ' + offeredTerm + ' \u2282\u2283', true);
     }
     phase = 7;
-    phaseLabel = '7';
+    phaseLabel = stepLabel(7);
     phaseMessage = agreementDecision === 'yes' ? 'Agreement signed and posted to ledger' : 'Agreement rejected';
     buttonLabel = 'Start Over';
     buttonEnabled = true;
@@ -177,10 +178,10 @@ function startOver() {
     { terms: 'PDC-AI', policy: 'Reject' },
   ];
   api.clearPulse();
-  phase = 0;
-  phaseLabel = '1';
-  phaseMessage = "Alice and Kleindorfer's delegate agency";
-  buttonLabel = 'Delegate';
+  phase = 1;
+  phaseLabel = stepLabel(2);
+  phaseMessage = 'Alice looks up terms';
+  buttonLabel = 'Lookup';
   buttonEnabled = true;
 }
 
