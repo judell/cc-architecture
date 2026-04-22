@@ -56,4 +56,4 @@ What would a more principled version look like? Probably a declarative format th
 
 From that declaration, the framework would generate the Globals.xs state machine, the ReactFlowPage timers, and the phase-gated `when` expressions automatically. The author would only write the node component templates and supply the data. Layout could be declared initially and refined by dragging, with a save-in-place workflow.
 
-This would turn a multi-day AI-assisted build into something a person could sketch out in an afternoon.
+This would turn an arduous AI-assisted build into something anybody could do a lot more easily.
