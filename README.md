@@ -2,6 +2,12 @@
 
 An interactive visualization of the [community-calendar](https://github.com/judell/community-calendar) data pipeline, built with [XMLUI](https://xmlui.org) and [ReactFlowCanvas](https://github.com/xmlui-org/xmlui/tree/main/packages/xmlui-react-flow).
 
+
+
+https://github.com/user-attachments/assets/97da6355-912c-4f8f-a2ff-7a3a7b1740bd
+
+
+
 ## Live demo
 
 [https://judell.github.io/cc-architecture/](https://judell.github.io/cc-architecture/)
