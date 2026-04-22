@@ -1,7 +1,19 @@
 <Component name="ClassifierNode">
+  <ModalDialog id="classifierDetailDialog" title="Claude AI Classifier">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        Uses Claude Haiku to categorize uncategorized events into standard buckets. Only classifies events that don't already have categories (carried forward from prior builds).
+      </Text>
+      <Text fontSize="$fontSize-small" fontWeight="bold">
+        Categories
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Music, Arts, Sports, Community, Government, Nightlife, Education, Food, Health, Family, and more.
+      </Text>
+    </VStack>
+  </ModalDialog>
   <VStack gap="$space-1" padding="$space-2">
     <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
-      <Text fontSize="$fontSize-lg">🤖</Text>
       <Text fontWeight="bold" fontSize="$fontSize-md">Claude AI</Text>
       <Text
         fontSize="$fontSize-small"

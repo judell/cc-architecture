@@ -1,7 +1,16 @@
 <Component name="CuratorNode">
+  <ModalDialog id="curatorDetailDialog" title="Curator Picks">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        User-contributed personal event picks. Curators add events they know about that aren't covered by feeds or scrapers.
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Submitted via the my-picks edge function. Curators can add rrule (recurrence) and category overrides via event_enrichments.
+      </Text>
+    </VStack>
+  </ModalDialog>
   <VStack gap="$space-1" padding="$space-2">
     <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
-      <Text fontSize="$fontSize-lg">✋</Text>
       <Text fontWeight="bold" fontSize="$fontSize-md">Curator Picks</Text>
       <Text
         fontSize="$fontSize-small"

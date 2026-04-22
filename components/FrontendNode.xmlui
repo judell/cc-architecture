@@ -1,7 +1,19 @@
 <Component name="FrontendNode">
+  <ModalDialog id="frontendDetailDialog" title="XMLUI Frontend">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        Declarative XMLUI app hosted on GitHub Pages. Queries deduplicated_events via Supabase REST API.
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Features: client-side search with scoring, category filtering, pagination, personal picks (saved to Supabase with RLS), event capture from poster images or audio via Claude/Whisper, list/grid/grouped layouts.
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Auth: GitHub OAuth via Supabase. Admin gating via UUID allowlist table.
+      </Text>
+    </VStack>
+  </ModalDialog>
   <VStack gap="$space-1" padding="$space-2">
     <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
-      <Text fontSize="$fontSize-lg">🖥️</Text>
       <Text fontWeight="bold" fontSize="$fontSize-md">XMLUI Frontend</Text>
       <Text
         fontSize="$fontSize-small"
@@ -12,7 +24,7 @@
       </Text>
     </HStack>
     <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
-      GitHub Pages · Declarative UI
+      GitHub Pages, Declarative UI
     </Text>
     <VStack when="{phase &lt; 7}" gap="$space-1">
       <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
@@ -26,10 +38,10 @@
         borderRadius="$borderRadius"
         backgroundColor="$color-surface-100">
         <Text fontSize="$fontSize-small" fontWeight="bold">
-          🎵 Summer Concert Series
+          Summer Concert Series
         </Text>
         <Text fontSize="$fontSize-small" color="$textColor-secondary">
-          Jul 15 · Music &amp; Concerts · 2 sources
+          Jul 15, Music, 2 sources
         </Text>
       </VStack>
       <VStack
@@ -38,10 +50,10 @@
         borderRadius="$borderRadius"
         backgroundColor="$color-surface-100">
         <Text fontSize="$fontSize-small" fontWeight="bold">
-          🥕 Farmers Market
+          Farmers Market
         </Text>
         <Text fontSize="$fontSize-small" color="$textColor-secondary">
-          Jul 12 · Community · 2 sources
+          Jul 12, Community, 2 sources
         </Text>
       </VStack>
       <VStack
@@ -50,10 +62,10 @@
         borderRadius="$borderRadius"
         backgroundColor="$color-surface-100">
         <Text fontSize="$fontSize-small" fontWeight="bold">
-          🎨 Art Walk
+          Art Walk
         </Text>
         <Text fontSize="$fontSize-small" color="$textColor-secondary">
-          Jul 18 · Arts &amp; Culture · 1 source
+          Jul 18, Arts, 1 source
         </Text>
       </VStack>
     </VStack>

@@ -1,4 +1,14 @@
 <Component name="LoadEventsNode">
+  <ModalDialog id="loadDetailDialog" title="load-events Edge Function">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        Deno/TypeScript function deployed to Supabase. Receives {city, events[]} and upserts into the events table.
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Dedup by UNIQUE(source, source_uid). Deletes events no longer in the feed. Returns {success, inserted, deleted}.
+      </Text>
+    </VStack>
+  </ModalDialog>
   <VStack gap="$space-1" padding="$space-2">
     <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
       <Text fontWeight="bold" fontSize="$fontSize-md">load-events</Text>
@@ -22,7 +32,7 @@
     </Text>
     <VStack when="{phase >= 5}" gap="$space-1">
       <Text fontSize="$fontSize-small" color="$color-success" textAlign="center">
-        ✓ 5 upserted · 0 deleted
+        5 upserted, 0 deleted
       </Text>
     </VStack>
   </VStack>

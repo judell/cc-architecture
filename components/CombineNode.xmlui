@@ -1,4 +1,23 @@
 <Component name="CombineNode">
+  <ModalDialog id="combineDetailDialog" title="combine_ics.py">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        Merges all .ics files per city, applies geo-filtering, and runs two rounds of deduplication.
+      </Text>
+      <Text fontSize="$fontSize-small" fontWeight="bold">
+        Cross-source dedup
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Identical title + date from different sources merged. X-SOURCE headers concatenated.
+      </Text>
+      <Text fontSize="$fontSize-small" fontWeight="bold">
+        Fuzzy dedup
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Token-set string similarity (threshold 0.85). Union-find algorithm assigns cluster IDs. Different locations never clustered.
+      </Text>
+    </VStack>
+  </ModalDialog>
   <VStack gap="$space-1" padding="$space-2">
     <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
       <Text fontWeight="bold" fontSize="$fontSize-md">combine_ics</Text>
@@ -11,7 +30,7 @@
       </Text>
     </HStack>
     <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
-      Merge &amp; deduplicate
+      Merge and deduplicate
     </Text>
     <Text
       fontSize="$fontSize-small"
@@ -22,7 +41,7 @@
     </Text>
     <VStack when="{phase >= 2}" gap="$space-1">
       <Text fontSize="$fontSize-small" textAlign="center">
-        7 events in → 2 dupes merged
+        7 events in, 2 dupes merged
       </Text>
       <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-success" textAlign="center">
         5 events out

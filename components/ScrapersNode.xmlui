@@ -1,7 +1,16 @@
 <Component name="ScrapersNode">
+  <ModalDialog id="scrapersDetailDialog" title="Web Scrapers">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        Python scripts that extract events from websites without ICS feeds. Built on reusable base classes for common platforms.
+      </Text>
+      <Text fontSize="$fontSize-small">
+        120+ site-specific scrapers. Reusable adapters for Eventbrite, Squarespace, Ticketmaster, Legistar (government), BookManager, and more. Each outputs standard .ics with X-SOURCE headers.
+      </Text>
+    </VStack>
+  </ModalDialog>
   <VStack gap="$space-1" padding="$space-2">
     <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
-      <Text fontSize="$fontSize-lg">🕷️</Text>
       <Text fontWeight="bold" fontSize="$fontSize-md">Scrapers</Text>
       <Text
         fontSize="$fontSize-small"

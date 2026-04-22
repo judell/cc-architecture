@@ -1,7 +1,16 @@
 <Component name="IcsFeedsNode">
+  <ModalDialog id="feedsDetailDialog" title="ICS Feed Sources">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        Native iCalendar feeds from venues and organizations. The preferred source type — structured, reliable, and maintained by event producers.
+      </Text>
+      <Text fontSize="$fontSize-small">
+        47 active feeds across 9 cities. Each feed is an HTTP URL returning .ics data that the pipeline downloads daily.
+      </Text>
+    </VStack>
+  </ModalDialog>
   <VStack gap="$space-1" padding="$space-2">
     <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
-      <Text fontSize="$fontSize-lg">📡</Text>
       <Text fontWeight="bold" fontSize="$fontSize-md">ICS Feeds</Text>
       <Text
         fontSize="$fontSize-small"

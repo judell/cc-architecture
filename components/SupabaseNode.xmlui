@@ -1,7 +1,28 @@
 <Component name="SupabaseNode">
+  <ModalDialog id="supabaseDetailDialog" title="Supabase (PostgreSQL)">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" fontWeight="bold">
+        events table
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Raw event records, one per source. Columns: title, start_time, end_time, location, description, url, city, source, category, image_url, all_day.
+      </Text>
+      <Text fontSize="$fontSize-small" fontWeight="bold">
+        deduplicated_events (materialized view)
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Groups by city + normalized_title + start_time. Aggregates source list, merges IDs. The frontend queries this view, not the raw table.
+      </Text>
+      <Text fontSize="$fontSize-small" fontWeight="bold">
+        Row Level Security
+      </Text>
+      <Text fontSize="$fontSize-small">
+        events: public SELECT. picks: authenticated users own rows only. feeds: admin write, public read.
+      </Text>
+    </VStack>
+  </ModalDialog>
   <VStack gap="$space-1" padding="$space-2">
     <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
-      <Text fontSize="$fontSize-lg">🗄️</Text>
       <Text fontWeight="bold" fontSize="$fontSize-md">Supabase</Text>
       <Text
         fontSize="$fontSize-small"
@@ -13,7 +34,7 @@
     </HStack>
     <VStack when="{phase &lt; 5}" gap="$space-1">
       <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
-        PostgreSQL · RLS · Edge Functions
+        PostgreSQL, RLS, Edge Functions
       </Text>
     </VStack>
     <VStack when="{phase >= 5}" gap="$space-1">
