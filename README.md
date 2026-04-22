@@ -18,7 +18,7 @@ An AI assistant (Claude) studied the MyTerms explainer — its Globals.xs state 
 
 The process worked, but it was rough:
 
-- **Trial and error with the xs engine.** The XMLUI scripting language (xs) has constraints that differ from standard JavaScript — no `var` declarations (use `global.*` on the App tag or `const` in function bodies), no `for...in` loops, no `window` access from expressions. These were discovered one error at a time. A reference for xs-compatible syntax would have prevented most of the false starts.
+- **Trial and error with the xs engine.** The XMLUI scripting language (xs) has constraints that differ from standard JavaScript — no `var` declarations (use `global.*` on the App tag or `const` in function bodies), no `for...in` loops, no `window` access from expressions. These are documented and were available via the xmlui-mcp server, but the AI assistant failed to look them up before writing code and instead discovered them one error at a time. The tooling was there; the discipline to use it wasn't.
 
 - **Undocumented ReactFlowCanvas API.** The canvas component lives in a separate package without standard XMLUI docs. Edge handle names (`right-top`, `left-bottom`, etc.), the node/child mapping convention, `pulseEdge` / `pulseEdgeRoundTrip` / `addEdge` / `removeEdge` — all of this was reverse-engineered from the working MyTerms code. Documenting the canvas API would make this kind of project far more accessible.
 
