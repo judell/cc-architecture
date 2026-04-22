@@ -1,42 +1,55 @@
-# MyTerms
+# Community Calendar Architecture Explainer
 
-An interactive demo of [IEEE Std 7012-2025](https://myterms.info/), the IEEE Standard for Machine Readable Personal Privacy Terms.
-
-[![MyTerms Overview](myterms-overview.png)](https://myterms.info/)
-
-## What is IEEE 7012?
-
-IEEE 7012 (aka "MyTerms," much as IEEE 802.11 is nicknamed "Wi-Fi") defines how individuals can proffer their own privacy terms to organizations they interact with online. Published in January 2026 by the IEEE Society on Social Implications of Technology, the standard is freely available through the [IEEE GET Program](https://myterms.info/).
-
-Today's internet runs on "notice and consent" -- organizations present take-it-or-leave-it terms of service, and individuals can only agree or walk away. IEEE 7012 reverses this dynamic. It gives individuals the role of *first party* in contractual agreements, enabling them to:
-
-- **Choose** standard-form privacy agreements from a public roster maintained by a neutral nonprofit
-- **Proffer** those terms to organizations via a software agent
-- **Record** signed agreements in their own data store, with identical copies kept by both sides
-
-This is analogous to how Creative Commons lets artists choose standard licenses for their work -- except here, individuals choose standard privacy terms for their personal data.
-
-## What this demo shows
-
-This interactive visualization walks through the core IEEE 7012 workflow:
-
-1. **Alice** (the person) selects a privacy term to proffer -- either SD-BASE (a base-level service delivery agreement) or PDC-AI (controlling use of personal data for AI training)
-2. **Alice's Agent** receives the chosen term and proffers it to the entity's agent
-3. **Possible MyTerms Agreements** lists the available standard-form agreements from the public roster
-4. **Kleindorfers Agent** (the entity's agent) evaluates the proffered term against Kleindorfers' policies and accepts or rejects it
-5. **Kleindorfers** (the entity) maintains its own policy table showing which terms it will accept
-6. When both sides agree, the signed agreement is recorded in both parties' data stores
-
-The flow of arrows shows delegation of agency (person to agent), proffering of terms, evaluation, and verification -- the key interactions defined in Section 5 of the standard.
+An interactive visualization of the [community-calendar](https://github.com/judell/community-calendar) data pipeline, built with [XMLUI](https://xmlui.org) and [ReactFlowCanvas](https://github.com/xmlui-org/xmlui/tree/main/packages/xmlui-react-flow).
 
 ## Live demo
 
-[https://judell.github.io/myterms/](https://judell.github.io/myterms/)
+[https://judell.github.io/cc-architecture/](https://judell.github.io/cc-architecture/)
 
-## Repo
+Click through 7 pipeline phases to see how event data flows from ICS feeds, web scrapers, and curator picks through GitHub Actions, deduplication, AI classification, Supabase, and into the XMLUI frontend.
 
-[https://github.com/judell/myterms](https://github.com/judell/myterms)
+## Second use of a raw capability
 
-## Animation
+This is the second project built with this approach. The first was [MyTerms](https://github.com/judell/myterms), an explainer for IEEE Std 7012-2025. Both projects use the same toolkit: XMLUI components rendered inside ReactFlowCanvas nodes, with animated edges showing data flow between them. The fact that it's been done twice suggests a capability that wants to be extracted and refined so that visualizations like this can be made in a more principled, more easily declarative way.
 
-[https://github.com/judell/myterms/blob/main/ARIA-Animation.md](https://github.com/judell/myterms/blob/main/ARIA-Animation.md)
+## How this was built
+
+An AI assistant (Claude) studied the MyTerms explainer — its Globals.xs state machine, its ReactFlowPage.xmlui canvas wiring, its node components — then pattern-copied the structure to build this community-calendar version. XMLUI Inspector traces were essential for debugging: when nodes didn't render or the state machine stalled, the trace showed exactly which phase transitions fired, which timers ticked, and which data bindings updated.
+
+The process worked, but it was rough:
+
+- **Trial and error with the xs engine.** The XMLUI scripting language (xs) has constraints that differ from standard JavaScript — no `var` declarations (use `global.*` on the App tag or `const` in function bodies), no `for...in` loops, no `window` access from expressions. These were discovered one error at a time. A reference for xs-compatible syntax would have prevented most of the false starts.
+
+- **Undocumented ReactFlowCanvas API.** The canvas component lives in a separate package without standard XMLUI docs. Edge handle names (`right-top`, `left-bottom`, etc.), the node/child mapping convention, `pulseEdge` / `pulseEdgeRoundTrip` / `addEdge` / `removeEdge` — all of this was reverse-engineered from the working MyTerms code. Documenting the canvas API would make this kind of project far more accessible.
+
+- **Manual state machine wiring.** Each phase requires a function in Globals.xs, a Timer in ReactFlowPage.xmlui, and corresponding `when` guards in node components. This is boilerplate that could be generated from a simpler declaration — something like a list of phases with their edge animations and node state changes.
+
+## Layout management
+
+ReactFlowCanvas nodes are draggable, and a save button exports the current positions as `layout.json`. This is genuinely useful: you can auto-generate an initial layout, then drag nodes into a clean arrangement by hand. But the handoff is awkward — you click save, a file downloads to ~/Downloads, and you have to copy it back into the project and commit it. A tighter loop (e.g., saving directly to the project, or a dev mode that auto-persists positions) would make iterating on layout much more pleasant.
+
+## XMLUI components in canvas nodes
+
+The most powerful aspect of this approach is that canvas nodes aren't just labels — they're full XMLUI components. Each node can contain tables, text, icons, select dropdowns, buttons, and modal dialogs. In the MyTerms demo, Alice's node has a `Select` for choosing privacy terms and a `Table` showing her data store. In this demo, the Supabase node shows the events table and deduplicated view, the Classifier node shows category assignments, and the Frontend node renders simulated event cards.
+
+This means a canvas node can be a live, interactive widget — not just a box in a diagram. The potential goes well beyond explainers:
+
+- **Dashboards** where each node is a live data view, connected by edges showing data dependencies
+- **Workflow builders** where users drag and connect functional components
+- **System monitors** where nodes show real-time status and edges show data flow between services
+- **Interactive tutorials** where each node is a step with embedded exercises
+
+The combination of a Visio-like canvas with reactive, data-bound components inside each node is unusual. Most diagramming tools give you shapes and arrows; this gives you shapes and arrows where each shape is a mini-application.
+
+## A better method
+
+What would a more principled version look like? Probably a declarative format that specifies:
+
+1. **Nodes** — id, label, component name, initial position/size
+2. **Edges** — source, target, handles, label
+3. **Phases** — ordered list, each declaring which edges animate, which node states change, what the button says
+4. **Data** — sample data that populates nodes at each phase
+
+From that declaration, the framework would generate the Globals.xs state machine, the ReactFlowPage timers, and the phase-gated `when` expressions automatically. The author would only write the node component templates and supply the data. Layout could be declared initially and refined by dragging, with a save-in-place workflow.
+
+This would turn a multi-day AI-assisted build into something a person could sketch out in an afternoon.
