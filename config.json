@@ -10,6 +10,7 @@
     "icon.save": "icons/save.svg",
     "icon.bot": "icons/bot.svg",
     "icon.person": "icons/person.svg",
-    "icon.building2": "icons/building2.svg"
+    "icon.building2": "icons/building2.svg",
+    "icon.github": "icons/github.svg"
   }
 }

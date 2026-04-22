@@ -24,6 +24,15 @@
     </Text>
     <SpaceFiller />
     <Icon
+      name="github"
+      tooltip="GitHub repo"
+      aria-label="GitHub repo"
+      width="20px"
+      height="20px"
+      color="$color-surface-500"
+      cursor="pointer"
+      onClick="window.open('https://github.com/judell/cc-architecture', '_blank')" />
+    <Icon
       name="save"
       tooltip="Save layout"
       aria-label="Save layout"
