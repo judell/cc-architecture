@@ -2,10 +2,10 @@
   <ModalDialog id="jsonDetailDialog" title="ics_to_json.py">
     <VStack gap="$space-2">
       <Text fontSize="$fontSize-small" color="$textColor-secondary">
-        Parses combined.ics with proper timezone handling (per city.conf), runs fuzzy title clustering, and carries forward categories from previous builds.
+        Parses combined.ics with proper timezone handling (per city.conf) and carries forward categories from previous builds.
       </Text>
       <Text fontSize="$fontSize-small">
-        Output: events.json with 1000-5000 events per city. Each event has title, start/end times, location, description, source attribution, and cluster_id.
+        Output: events.json with 1000-5000 events per city. Each event has title, start/end times, location, description, and source attribution.
       </Text>
     </VStack>
   </ModalDialog>
@@ -21,7 +21,7 @@
       </Text>
     </HStack>
     <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
-      Parse and cluster
+      Parse and convert
     </Text>
     <Text
       fontSize="$fontSize-small"
@@ -35,7 +35,7 @@
         Timezone: America/Los_Angeles
       </Text>
       <Text fontSize="$fontSize-small" textAlign="center">
-        5 events, 2 clusters found
+        5 events converted
       </Text>
       <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-success" textAlign="center">
         events.json ready

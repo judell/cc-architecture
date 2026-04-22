@@ -10,12 +10,6 @@
       <Text fontSize="$fontSize-small">
         Identical title + date from different sources merged. X-SOURCE headers concatenated.
       </Text>
-      <Text fontSize="$fontSize-small" fontWeight="bold">
-        Fuzzy dedup
-      </Text>
-      <Text fontSize="$fontSize-small">
-        Token-set string similarity (threshold 0.85). Union-find algorithm assigns cluster IDs. Different locations never clustered.
-      </Text>
     </VStack>
   </ModalDialog>
   <VStack gap="$space-1" padding="$space-2">
