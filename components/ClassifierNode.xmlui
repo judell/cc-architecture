@@ -1,0 +1,33 @@
+<Component name="ClassifierNode">
+  <VStack gap="$space-1" padding="$space-2">
+    <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
+      <Text fontSize="$fontSize-lg">🤖</Text>
+      <Text fontWeight="bold" fontSize="$fontSize-md">Claude AI</Text>
+      <Text
+        fontSize="$fontSize-small"
+        color="$color-primary"
+        cursor="pointer"
+        onClick="classifierDetailDialog.open()">
+        ⓘ
+      </Text>
+    </HStack>
+    <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
+      Classify events (Haiku)
+    </Text>
+    <Text
+      fontSize="$fontSize-small"
+      when="{phase &lt; 3}"
+      color="$textColor-secondary"
+      textAlign="center">
+      Waiting for input...
+    </Text>
+    <Table
+      data="{phase >= 4 ? sampleClassified : []}"
+      fontSize="$fontSize-small"
+      when="{phase >= 4}"
+      noDataTemplate="">
+      <Column bindTo="title" header="Event" width="2*" />
+      <Column bindTo="category" header="Category" />
+    </Table>
+  </VStack>
+</Component>

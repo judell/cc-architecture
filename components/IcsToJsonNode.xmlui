@@ -1,0 +1,35 @@
+<Component name="IcsToJsonNode">
+  <VStack gap="$space-1" padding="$space-2">
+    <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
+      <Text fontWeight="bold" fontSize="$fontSize-md">ics_to_json</Text>
+      <Text
+        fontSize="$fontSize-small"
+        color="$color-primary"
+        cursor="pointer"
+        onClick="jsonDetailDialog.open()">
+        ⓘ
+      </Text>
+    </HStack>
+    <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
+      Parse &amp; cluster
+    </Text>
+    <Text
+      fontSize="$fontSize-small"
+      when="{phase &lt; 2}"
+      color="$textColor-secondary"
+      textAlign="center">
+      Waiting for input...
+    </Text>
+    <VStack when="{phase >= 3}" gap="$space-1">
+      <Text fontSize="$fontSize-small" textAlign="center">
+        Timezone: America/Los_Angeles
+      </Text>
+      <Text fontSize="$fontSize-small" textAlign="center">
+        5 events · 2 clusters found
+      </Text>
+      <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-success" textAlign="center">
+        events.json ready
+      </Text>
+    </VStack>
+  </VStack>
+</Component>

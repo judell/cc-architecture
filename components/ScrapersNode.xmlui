@@ -1,0 +1,26 @@
+<Component name="ScrapersNode">
+  <VStack gap="$space-1" padding="$space-2">
+    <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
+      <Text fontSize="$fontSize-lg">🕷️</Text>
+      <Text fontWeight="bold" fontSize="$fontSize-md">Scrapers</Text>
+      <Text
+        fontSize="$fontSize-small"
+        color="$color-primary"
+        cursor="pointer"
+        onClick="scrapersDetailDialog.open()">
+        ⓘ
+      </Text>
+    </HStack>
+    <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
+      120+ scripts · reusable adapters
+    </Text>
+    <Table
+      data="{phase >= 1 ? sampleScrapers : []}"
+      fontSize="$fontSize-small"
+      when="{phase >= 1}"
+      noDataTemplate="">
+      <Column bindTo="name" header="Script" width="2*" />
+      <Column bindTo="platform" header="Platform" />
+    </Table>
+  </VStack>
+</Component>

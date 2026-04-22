@@ -1,39 +1,69 @@
 {
   "nodes": {
-    "person": {
-      "x": -336,
-      "y": -384,
-      "width": 540,
-      "height": 380
+    "ics-feeds": {
+      "x": -528,
+      "y": -400,
+      "width": 312,
+      "height": 260
     },
-    "person-agent": {
-      "x": 320,
-      "y": 304,
-      "width": 300,
+    "scrapers": {
+      "x": -528,
+      "y": -80,
+      "width": 312,
+      "height": 244
+    },
+    "curator": {
+      "x": -528,
+      "y": 208,
+      "width": 312,
+      "height": 228
+    },
+    "github-actions": {
+      "x": -80,
+      "y": -160,
+      "width": 244,
+      "height": 168
+    },
+    "combine": {
+      "x": 304,
+      "y": -144,
+      "width": 244,
+      "height": 232
+    },
+    "ics-to-json": {
+      "x": 672,
+      "y": -192,
+      "width": 260,
       "height": 200
     },
-    "agreements": {
-      "x": 304,
-      "y": -272,
-      "width": 350,
-      "height": 402
-    },
-    "entity-agent": {
-      "x": 800,
-      "y": -368,
-      "width": 300,
+    "classifier": {
+      "x": 1088,
+      "y": -208,
+      "width": 308,
       "height": 216
     },
-    "entity": {
-      "x": 736,
-      "y": 160,
-      "width": 604,
-      "height": 416
+    "load-events": {
+      "x": -32,
+      "y": 240,
+      "width": 324,
+      "height": 176
+    },
+    "supabase": {
+      "x": 480,
+      "y": 208,
+      "width": 388,
+      "height": 356
+    },
+    "frontend": {
+      "x": 1040,
+      "y": 112,
+      "width": 388,
+      "height": 376
     },
     "control": {
-      "x": 400,
-      "y": -480,
-      "width": 180,
+      "x": 300,
+      "y": -300,
+      "width": 200,
       "height": 82
     }
   }

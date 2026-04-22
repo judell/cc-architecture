@@ -1,0 +1,26 @@
+<Component name="CuratorNode">
+  <VStack gap="$space-1" padding="$space-2">
+    <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
+      <Text fontSize="$fontSize-lg">✋</Text>
+      <Text fontWeight="bold" fontSize="$fontSize-md">Curator Picks</Text>
+      <Text
+        fontSize="$fontSize-small"
+        color="$color-primary"
+        cursor="pointer"
+        onClick="curatorDetailDialog.open()">
+        ⓘ
+      </Text>
+    </HStack>
+    <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
+      User-contributed events
+    </Text>
+    <Table
+      data="{phase >= 1 ? samplePicks : []}"
+      fontSize="$fontSize-small"
+      when="{phase >= 1}"
+      noDataTemplate="">
+      <Column bindTo="title" header="Event" width="2*" />
+      <Column bindTo="curator" header="By" />
+    </Table>
+  </VStack>
+</Component>

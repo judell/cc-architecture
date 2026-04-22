@@ -1,0 +1,43 @@
+<Component name="SupabaseNode">
+  <VStack gap="$space-1" padding="$space-2">
+    <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
+      <Text fontSize="$fontSize-lg">🗄️</Text>
+      <Text fontWeight="bold" fontSize="$fontSize-md">Supabase</Text>
+      <Text
+        fontSize="$fontSize-small"
+        color="$color-primary"
+        cursor="pointer"
+        onClick="supabaseDetailDialog.open()">
+        ⓘ
+      </Text>
+    </HStack>
+    <VStack when="{phase &lt; 5}" gap="$space-1">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
+        PostgreSQL · RLS · Edge Functions
+      </Text>
+    </VStack>
+    <VStack when="{phase >= 5}" gap="$space-1">
+      <Text fontSize="$fontSize-small" fontWeight="bold">events table</Text>
+      <Text fontSize="$fontSize-small">
+        {sampleRawEvents.length} raw records loaded
+      </Text>
+      <Text
+        fontSize="$fontSize-small"
+        fontWeight="bold"
+        when="{phase >= 6}">
+        deduplicated_events
+      </Text>
+      <Table
+        data="{phase >= 6 ? sampleDeduped : []}"
+        fontSize="$fontSize-small"
+        when="{phase >= 6}"
+        noDataTemplate="">
+        <Column bindTo="title" header="Event" width="2*" />
+        <Column bindTo="category" header="Cat" />
+        <Column header="Src">
+          <Text fontSize="$fontSize-small">{$item.sources}</Text>
+        </Column>
+      </Table>
+    </VStack>
+  </VStack>
+</Component>

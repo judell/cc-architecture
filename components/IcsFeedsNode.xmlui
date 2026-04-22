@@ -1,0 +1,26 @@
+<Component name="IcsFeedsNode">
+  <VStack gap="$space-1" padding="$space-2">
+    <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
+      <Text fontSize="$fontSize-lg">📡</Text>
+      <Text fontWeight="bold" fontSize="$fontSize-md">ICS Feeds</Text>
+      <Text
+        fontSize="$fontSize-small"
+        color="$color-primary"
+        cursor="pointer"
+        onClick="feedsDetailDialog.open()">
+        ⓘ
+      </Text>
+    </HStack>
+    <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
+      47 active feeds · 9 cities
+    </Text>
+    <Table
+      data="{phase >= 1 ? sampleFeeds : []}"
+      fontSize="$fontSize-small"
+      when="{phase >= 1}"
+      noDataTemplate="">
+      <Column bindTo="name" header="Feed" width="2*" />
+      <Column bindTo="city" header="City" />
+    </Table>
+  </VStack>
+</Component>

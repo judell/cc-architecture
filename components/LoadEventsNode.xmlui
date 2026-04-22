@@ -1,0 +1,29 @@
+<Component name="LoadEventsNode">
+  <VStack gap="$space-1" padding="$space-2">
+    <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
+      <Text fontWeight="bold" fontSize="$fontSize-md">load-events</Text>
+      <Text
+        fontSize="$fontSize-small"
+        color="$color-primary"
+        cursor="pointer"
+        onClick="loadDetailDialog.open()">
+        ⓘ
+      </Text>
+    </HStack>
+    <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
+      Edge function (Deno)
+    </Text>
+    <Text
+      fontSize="$fontSize-small"
+      when="{phase &lt; 4}"
+      color="$textColor-secondary"
+      textAlign="center">
+      Waiting...
+    </Text>
+    <VStack when="{phase >= 5}" gap="$space-1">
+      <Text fontSize="$fontSize-small" color="$color-success" textAlign="center">
+        ✓ 5 upserted · 0 deleted
+      </Text>
+    </VStack>
+  </VStack>
+</Component>

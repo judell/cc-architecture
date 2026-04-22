@@ -1,65 +1,38 @@
 <App
   layout="vertical-sticky"
-  name="MyTerms"
-  global.offeredTerm="{''}"
-  global.agreementDecision="{''}"
-  global.agreementCount="{0}"
-  global.acceptedCount="{0}"
-  global.kleindorfersTerms="{[{terms:'SD-BASE',policy:'Accept'},{terms:'PDC-AI',policy:'Reject'}]}"
-  global.alicePersonalDataStore="{[]}"
-  global.kleindorfersOrgDataStore="{[]}"
+  name="Community Calendar Architecture"
   global.phase="{0}"
   global.phaseLabel="{'1'}"
-  global.phaseMessage="{'Alice and Kleindorfer\'s delegate agency'}"
-  global.buttonLabel="{'Delegate'}"
+  global.phaseMessage="{'Collect from sources'}"
+  global.buttonLabel="{'Collect'}"
   global.buttonEnabled="{true}"
   global.pulseDuration="{1800}"
   global.roundTrip="{''}"
-  global.pulse="{{ active: false, edges: [], step: -1, currentEdge: '' }}">
-  <DataSource
-    id="readmeData"
-    url="{'https://api.github.com/repos/judell/myterms/readme'}"
-    headers="{{
-      Accept: 'application/vnd.github.v3+json'
-    }}" />
-
-  <Theme maxWidth-ModalDialog="90%" maxHeight-ModalDialog="90vh">
-    <ModalDialog id="helpDialog" showCloseButton="true">
-      <Markdown
-        when="{readmeData.value}"
-        content="{window.decodeBase64(readmeData.value.content)}"
-        fontSize="$fontSize-sm"
-        lineHeight="1.3"
-        padding="0"
-        margin="0"
-        openLinkInNewTab="true" />
-    </ModalDialog>
-  </Theme>
+  global.pulse="{{ active: false, edges: [], step: -1, currentEdge: '' }}"
+  global.layout="{null}"
+  global.sampleFeeds="{[{name:'Luther Burbank Center',city:'santarosa'},{name:'Press Democrat',city:'santarosa'},{name:'City of Santa Rosa',city:'santarosa'}]}"
+  global.sampleScrapers="{[{name:'bohemian.py',platform:'custom'},{name:'lagunitas.py',platform:'custom'},{name:'eventbrite.py',platform:'Eventbrite'}]}"
+  global.samplePicks="{[{title:'Jazz in the Park',curator:'alice'},{title:'Makers Faire',curator:'bob'}]}"
+  global.sampleRawEvents="{[{title:'Summer Concert Series',source:'lbc-feed',date:'2026-07-15'},{title:'Summer Concert Series',source:'pressdemocrat',date:'2026-07-15'},{title:'Farmers Market',source:'city-sr',date:'2026-07-12'},{title:'Art Walk',source:'bohemian',date:'2026-07-18'},{title:'City Council Meeting',source:'legistar',date:'2026-07-14'},{title:'Trivia Night',source:'eventbrite',date:'2026-07-16'}]}"
+  global.sampleClassified="{[{title:'Summer Concert Series',category:'Music'},{title:'Farmers Market',category:'Community'},{title:'Art Walk',category:'Arts'},{title:'City Council Meeting',category:'Government'},{title:'Trivia Night',category:'Nightlife'}]}"
+  global.sampleDeduped="{[{title:'Summer Concert Series',category:'Music',sources:2},{title:'Farmers Market',category:'Community',sources:2},{title:'Art Walk',category:'Arts',sources:1},{title:'City Council Meeting',category:'Government',sources:1},{title:'Trivia Night',category:'Nightlife',sources:1}]}"
+>
 
   <AppHeader>
     <Text fontWeight="bold">
-      MyTerms
+      Community Calendar Architecture
     </Text>
     <SpaceFiller />
-    <Icon
-      name="message-circle-question"
-      tooltip="Help"
-      aria-label="Help"
-      width="20px"
-      height="20px"
-      color="$color-surface-500"
-      cursor="pointer"
-      onClick="helpDialog.open()" />
     <Icon
       name="save"
       tooltip="Save layout"
       aria-label="Save layout"
       width="20px"
-      height="20x"
+      height="20px"
       color="$color-surface-500"
       cursor="pointer"
       onClick="saveLayout()" />
-      <Inspector />
+    <Inspector />
   </AppHeader>
 
   <Pages>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MyTerms</title>
+  <title>Community Calendar Architecture</title>
   <script>window.__cb = Date.now();</script>
   <script>document.write('<script src="xmlui/xmlui-standalone.umd.js?v=' + __cb + '"><\/script>');</script>
   <script>document.write('<script src="xmlui/xmlui-react-flow.js?v=' + __cb + '"><\/script>');</script>
@@ -15,6 +15,16 @@
     window.decodeBase64 = function(b64) {
       if (!b64) return '';
       return decodeURIComponent(escape(atob(b64.replace(/\n/g, ''))));
+    };
+    window.saveLayout = function() {
+      var json = JSON.stringify(window.__reactFlowCanvasApi.getLayout(), null, 2);
+      var blob = new Blob([json], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'layout.json';
+      a.click();
+      URL.revokeObjectURL(url);
     };
   </script>
 </head>

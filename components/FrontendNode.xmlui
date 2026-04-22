@@ -1,0 +1,61 @@
+<Component name="FrontendNode">
+  <VStack gap="$space-1" padding="$space-2">
+    <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
+      <Text fontSize="$fontSize-lg">🖥️</Text>
+      <Text fontWeight="bold" fontSize="$fontSize-md">XMLUI Frontend</Text>
+      <Text
+        fontSize="$fontSize-small"
+        color="$color-primary"
+        cursor="pointer"
+        onClick="frontendDetailDialog.open()">
+        ⓘ
+      </Text>
+    </HStack>
+    <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
+      GitHub Pages · Declarative UI
+    </Text>
+    <VStack when="{phase &lt; 7}" gap="$space-1">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
+        Waiting for data...
+      </Text>
+    </VStack>
+    <VStack when="{phase >= 7}" gap="$space-2">
+      <VStack
+        gap="$space-1"
+        padding="$space-2"
+        borderRadius="$borderRadius"
+        backgroundColor="$color-surface-100">
+        <Text fontSize="$fontSize-small" fontWeight="bold">
+          🎵 Summer Concert Series
+        </Text>
+        <Text fontSize="$fontSize-small" color="$textColor-secondary">
+          Jul 15 · Music &amp; Concerts · 2 sources
+        </Text>
+      </VStack>
+      <VStack
+        gap="$space-1"
+        padding="$space-2"
+        borderRadius="$borderRadius"
+        backgroundColor="$color-surface-100">
+        <Text fontSize="$fontSize-small" fontWeight="bold">
+          🥕 Farmers Market
+        </Text>
+        <Text fontSize="$fontSize-small" color="$textColor-secondary">
+          Jul 12 · Community · 2 sources
+        </Text>
+      </VStack>
+      <VStack
+        gap="$space-1"
+        padding="$space-2"
+        borderRadius="$borderRadius"
+        backgroundColor="$color-surface-100">
+        <Text fontSize="$fontSize-small" fontWeight="bold">
+          🎨 Art Walk
+        </Text>
+        <Text fontSize="$fontSize-small" color="$textColor-secondary">
+          Jul 18 · Arts &amp; Culture · 1 source
+        </Text>
+      </VStack>
+    </VStack>
+  </VStack>
+</Component>

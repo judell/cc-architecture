@@ -1,0 +1,32 @@
+<Component name="CombineNode">
+  <VStack gap="$space-1" padding="$space-2">
+    <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
+      <Text fontWeight="bold" fontSize="$fontSize-md">combine_ics</Text>
+      <Text
+        fontSize="$fontSize-small"
+        color="$color-primary"
+        cursor="pointer"
+        onClick="combineDetailDialog.open()">
+        ⓘ
+      </Text>
+    </HStack>
+    <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
+      Merge &amp; deduplicate
+    </Text>
+    <Text
+      fontSize="$fontSize-small"
+      when="{phase === 0}"
+      color="$textColor-secondary"
+      textAlign="center">
+      Waiting for input...
+    </Text>
+    <VStack when="{phase >= 2}" gap="$space-1">
+      <Text fontSize="$fontSize-small" textAlign="center">
+        7 events in → 2 dupes merged
+      </Text>
+      <Text fontSize="$fontSize-small" fontWeight="bold" color="$color-success" textAlign="center">
+        5 events out
+      </Text>
+    </VStack>
+  </VStack>
+</Component>

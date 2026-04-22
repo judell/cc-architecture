@@ -1,256 +1,232 @@
-function responsive(small, large) {
-  return mediaSize.sizeIndex <= 2 ? small : large;
-}
-
-function makeStoreEntry(term, counterparty) {
-  return {
-    term: term,
-    counterparty: counterparty,
-    timestamp: new Date().toISOString(),
-    country: "USA",
-  };
-}
-
-function lookupTermPolicy(term) {
-  for (let i = 0; i < kleindorfersTerms.length; i++) {
-    if (kleindorfersTerms[i].terms === term) return kleindorfersTerms[i].policy;
-  }
-  return "Reject";
-}
-
-function pulseReached(edgeLabel) {
-  if (!pulse.active && pulse.currentEdge === "") return false;
-  if (!pulse.active) return true;
-  return (
-    pulse.edges.indexOf(pulse.currentEdge) > pulse.edges.indexOf(edgeLabel)
-  );
-}
-
-function pulseNotReached(edgeLabel) {
-  return !pulseReached(edgeLabel);
-}
-
-function onPulseEdgeChange(change) {
-  if (change.newValue === "proffers" && offeredTerm !== "") {
-    agreementDecision =
-      kleindorfersTerms.find(function (t) {
-        return t.terms === offeredTerm;
-      }) &&
-      kleindorfersTerms.find(function (t) {
-        return t.terms === offeredTerm;
-      }).policy === "Accept"
-        ? "yes"
-        : "no";
-  }
-}
+// --- Phase machine ---
 
 function nextStep() {
-  if (phase === 0) delegate();
-  else if (phase === 1) getTerms();
-  else if (phase === 4) proffer();
-  else if (phase === 5) applyPolicy();
-  else if (phase === 6) agree();
+  if (phase === 0) collect();
+  else if (phase === 1) combine();
+  else if (phase === 2) convert();
+  else if (phase === 3) classify();
+  else if (phase === 4) load();
+  else if (phase === 5) refresh();
+  else if (phase === 6) display();
   else if (phase === 7) startOver();
 }
 
-function delegate() {
-  offeredTerm = "";
-  agreementDecision = "";
-  acceptedCount = 0;
-  kleindorfersTerms = [
-    { terms: "SD-BASE", policy: "Accept" },
-    { terms: "PDC-AI", policy: "Reject" },
-  ];
-  window.__reactFlowCanvasApi.clearPulse();
-  window.__reactFlowCanvasApi.pulseEdge("delegates agency", pulseDuration);
-  window.__reactFlowCanvasApi.pulseEdge("delegates personal agency", pulseDuration);
-  hasDelegated = true;
-  phase = "delegating";
+function collect() {
+  phase = 'collecting';
   buttonEnabled = false;
+  window.__reactFlowCanvasApi.pulseEdge('download feeds', pulseDuration);
+  window.__reactFlowCanvasApi.pulseEdge('run scrapers', pulseDuration);
+  window.__reactFlowCanvasApi.pulseEdge('collect picks', pulseDuration);
 }
 
-function getTerms() {
-  phase = 2;
-  phaseLabel = stepLabel(2);
-  phaseMessage = 'Alice looks up terms';
+function combine() {
+  phase = 'combining';
   buttonEnabled = false;
-  const api = window.__reactFlowCanvasApi;
-  api.addEdge('e-p-ag', 'person', 'agreements', 'right-top', 'left-top', 'lookup');
-  api.pulseEdgeRoundTrip('lookup', pulseDuration);
-  roundTrip = 'lookup';
+  window.__reactFlowCanvasApi.pulseEdge('per-city .ics', pulseDuration);
 }
 
-function sendTerm() {
-  phase = 'sending';
+function convert() {
+  phase = 'converting';
   buttonEnabled = false;
-  const api = window.__reactFlowCanvasApi;
-  api.addEdge('e-p-pa-send', 'person', 'person-agent', 'bottom-right', 'top-right', 'send', false, { labelPosition: 60 });
-  pulse = { active: true, edges: ['send'], step: 0, currentEdge: 'lookup' };
+  window.__reactFlowCanvasApi.pulseEdge('combined.ics', pulseDuration);
 }
 
-function cleanupSendEdge() {
-  window.__reactFlowCanvasApi.removeEdge('e-p-pa-send');
-}
-
-function proffer() {
-  phase = 'proffering';
+function classify() {
+  phase = 'classifying';
   buttonEnabled = false;
-  pulse = { active: true, edges: ['proffers'], step: 0, currentEdge: 'lookup' };
+  window.__reactFlowCanvasApi.pulseEdge('events.json', pulseDuration);
 }
 
-function applyPolicy() {
-  phase = 'consulting';
+function load() {
+  phase = 'loading';
   buttonEnabled = false;
-  const api = window.__reactFlowCanvasApi;
-  api.addEdge('e-ea-consult', 'entity-agent', 'entity', 'bottom-left', 'top-left', 'consults policy');
-  api.pulseEdgeRoundTrip('consults policy', pulseDuration);
-  roundTrip = 'consults policy';
+  window.__reactFlowCanvasApi.pulseEdge('classified JSON', pulseDuration);
 }
 
-function onRoundTripComplete() {
-  if (roundTrip === 'lookup') {
-    window.__reactFlowCanvasApi.removeEdge('e-p-ag');
-    phase = 3;
-    phaseLabel = stepLabel(3);
-    phaseMessage = "Choose a term from Alice's list";
-    buttonLabel = '';
-    buttonEnabled = false;
-  }
-  if (roundTrip === 'consults policy') {
-    window.__reactFlowCanvasApi.removeEdge('e-ea-consult');
-    if (agreementDecision === 'yes') {
-      phase = 6;
-      phaseLabel = stepLabel(6);
-      phaseMessage = "Kleindorfer's agent verifies agreement";
-      buttonLabel = 'Verify';
-      buttonEnabled = true;
-    } else {
-      alicePersonalDataStore = [...alicePersonalDataStore, makeStoreEntry(offeredTerm + ' (rejected)', "Kleindorfer's")];
-      kleindorfersOrgDataStore = [...kleindorfersOrgDataStore, makeStoreEntry(offeredTerm + ' (rejected)', 'Alice')];
-      phase = 7;
-      phaseLabel = stepLabel(6);
-      phaseMessage = 'Agreement rejected';
-      buttonLabel = 'Start Over';
-      buttonEnabled = true;
-    }
-  }
-  if (roundTrip === 'verifies agreement') {
-    window.__reactFlowCanvasApi.removeEdge('e-ea-verify');
-    kleindorfersTerms = kleindorfersTerms.map(function(t) {
-      return t.terms === offeredTerm ? { terms: t.terms, policy: agreementDecision === 'yes' ? 'Accept' : 'Reject' } : t;
-    });
-    status = agreementDecision === 'yes' ? 'accepted' : 'rejected';
-    alicePersonalDataStore = [...alicePersonalDataStore, makeStoreEntry(offeredTerm + ' (' + status + ')', "Kleindorfer's")];
-    kleindorfersOrgDataStore = [...kleindorfersOrgDataStore, makeStoreEntry(offeredTerm + ' (' + status + ')', 'Alice')];
-    if (agreementDecision === 'yes') {
-      acceptedCount = acceptedCount + 1;
-      window.__reactFlowCanvasApi.addEdge('e-signed-' + acceptedCount, 'person', 'entity-agent', 'right-magnet', 'left-magnet', 'signed: ' + offeredTerm + ' \u2282\u2283', true);
-    }
-    phase = 7;
-    phaseLabel = stepLabel(7);
-    phaseMessage = agreementDecision === 'yes' ? 'Agreement signed and posted to ledger' : 'Agreement rejected';
-    buttonLabel = 'Start Over';
-    buttonEnabled = true;
-  }
-  roundTrip = '';
-}
-
-function agree() {
-  phase = 'verifying';
+function refresh() {
+  phase = 'refreshing';
   buttonEnabled = false;
-  const api = window.__reactFlowCanvasApi;
-  api.addEdge('e-ea-verify', 'entity-agent', 'entity', 'bottom-left', 'top-left', 'verifies agreement', false, { labelPosition: 30 });
-  api.pulseEdge('verifies agreement', pulseDuration * 2);
-  roundTrip = 'verifies agreement';
+  window.__reactFlowCanvasApi.pulseEdge('upsert events', pulseDuration);
+}
+
+function display() {
+  phase = 'displaying';
+  buttonEnabled = false;
+  window.__reactFlowCanvasApi.pulseEdge('REST query', pulseDuration);
 }
 
 function startOver() {
-  const api = window.__reactFlowCanvasApi;
-  // Remove all signed edges
-  for (let i = 1; i <= acceptedCount; i++) {
-    api.removeEdge('e-signed-' + i);
-  }
-  offeredTerm = '';
-  agreementDecision = '';
-  acceptedCount = 0;
-  kleindorfersTerms = [
-    { terms: 'SD-BASE', policy: 'Accept' },
-    { terms: 'PDC-AI', policy: 'Reject' },
-  ];
-  api.clearPulse();
-  phase = 1;
-  phaseLabel = stepLabel(2);
-  phaseMessage = 'Alice looks up terms';
-  buttonLabel = 'Lookup';
+  window.__reactFlowCanvasApi.clearPulse();
+  phase = 0;
+  phaseLabel = '1';
+  phaseMessage = 'Collect from sources';
+  buttonLabel = 'Collect';
   buttonEnabled = true;
 }
 
-function saveLayout() {
-  const json = JSON.stringify(window.__reactFlowCanvasApi.getLayout(), null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'layout.json';
-  a.click();
-  URL.revokeObjectURL(url);
+function onCollectDone() {
+  phase = 1;
+  phaseLabel = '2';
+  phaseMessage = 'Combine per-city ICS files';
+  buttonLabel = 'Combine';
+  buttonEnabled = true;
 }
 
-function makeNode(id, label, extra) {
-  const n = layout.nodes[id];
-  const data = { label: label };
-  if (extra) {
-    for (const k in extra) {
-      data[k] = extra[k];
-    }
-  }
+function onCombineDone() {
+  phase = 2;
+  phaseLabel = '3';
+  phaseMessage = 'Convert to JSON & cluster';
+  buttonLabel = 'Convert';
+  buttonEnabled = true;
+}
+
+function onConvertDone() {
+  phase = 3;
+  phaseLabel = '4';
+  phaseMessage = 'Classify with Claude AI';
+  buttonLabel = 'Classify';
+  buttonEnabled = true;
+}
+
+function onClassifyDone() {
+  phase = 4;
+  phaseLabel = '5';
+  phaseMessage = 'Load events to Supabase';
+  buttonLabel = 'Load';
+  buttonEnabled = true;
+}
+
+function onLoadDone() {
+  phase = 5;
+  phaseLabel = '6';
+  phaseMessage = 'Upsert to database';
+  buttonLabel = 'Upsert';
+  buttonEnabled = true;
+}
+
+function onRefreshDone() {
+  phase = 6;
+  phaseLabel = '7';
+  phaseMessage = 'Query & render in frontend';
+  buttonLabel = 'Display';
+  buttonEnabled = true;
+}
+
+function onDisplayDone() {
+  phase = 7;
+  phaseLabel = '';
+  phaseMessage = 'Pipeline complete';
+  buttonLabel = 'Start Over';
+  buttonEnabled = true;
+}
+
+// --- Node & edge builders ---
+
+function makeNode(id, label, chrome) {
+  const n = layout.nodes[id] || { x: 0, y: 0, width: 200, height: 150 };
+  const data = chrome === false ? { label: label, chrome: false } : { label: label };
   return { id: id, position: { x: n.x, y: n.y }, data: data, width: n.width, height: n.height };
 }
 
 function getNodes() {
   return [
-    makeNode("person", "Alice", { magnetY: "12%" }),
-    makeNode("person-agent", "Alices Agent"),
-    makeNode("agreements", "Agreements"),
-    makeNode("entity-agent", "Kleindorfer's Agent", { magnetY: "22%" }),
-    makeNode("entity", "Kleindorfer's"),
-    makeNode("control", "Control", { chrome: false }),
+    makeNode('ics-feeds', 'ICS Feeds'),
+    makeNode('scrapers', 'Scrapers'),
+    makeNode('curator', 'Curator Picks'),
+    makeNode('github-actions', 'GitHub Actions'),
+    makeNode('combine', 'combine_ics'),
+    makeNode('ics-to-json', 'ics_to_json'),
+    makeNode('classifier', 'Claude AI'),
+    makeNode('load-events', 'load-events'),
+    makeNode('supabase', 'Supabase'),
+    makeNode('frontend', 'Frontend'),
+    makeNode('control', 'Control', false),
   ];
 }
 
 function getEdges() {
   return [
     {
-      id: "e-p-pa",
-      source: "person",
-      target: "person-agent",
-      sourceHandle: "bottom-left",
-      targetHandle: "top-left",
-      data: { label: "delegates personal agency", labelPosition: 40 },
+      id: 'e-ics-gh',
+      source: 'ics-feeds',
+      target: 'github-actions',
+      sourceHandle: 'right-top',
+      targetHandle: 'left-top',
+      data: { label: 'download feeds' },
     },
     {
-      id: "e-pa-ea",
-      source: "person-agent",
-      target: "entity-agent",
-      sourceHandle: "right-top",
-      targetHandle: "left-bottom",
-      data: { label: "proffers" },
+      id: 'e-scr-gh',
+      source: 'scrapers',
+      target: 'github-actions',
+      sourceHandle: 'right-top',
+      targetHandle: 'left-bottom',
+      data: { label: 'run scrapers' },
     },
     {
-      id: "e-ea-e",
-      source: "entity",
-      target: "entity-agent",
-      sourceHandle: "top-right",
-      targetHandle: "bottom-right",
-      data: { label: "delegates agency", labelPosition: 30 },
+      id: 'e-cur-gh',
+      source: 'curator',
+      target: 'github-actions',
+      sourceHandle: 'right-top',
+      targetHandle: 'left-bottom',
+      data: { label: 'collect picks' },
+    },
+    {
+      id: 'e-gh-combine',
+      source: 'github-actions',
+      target: 'combine',
+      sourceHandle: 'right-top',
+      targetHandle: 'left-top',
+      data: { label: 'per-city .ics' },
+    },
+    {
+      id: 'e-combine-json',
+      source: 'combine',
+      target: 'ics-to-json',
+      sourceHandle: 'right-top',
+      targetHandle: 'left-top',
+      data: { label: 'combined.ics' },
+    },
+    {
+      id: 'e-json-classify',
+      source: 'ics-to-json',
+      target: 'classifier',
+      sourceHandle: 'right-top',
+      targetHandle: 'left-top',
+      data: { label: 'events.json' },
+    },
+    {
+      id: 'e-classify-load',
+      source: 'classifier',
+      target: 'load-events',
+      sourceHandle: 'bottom-left',
+      targetHandle: 'top-left',
+      data: { label: 'classified JSON' },
+    },
+    {
+      id: 'e-load-supa',
+      source: 'load-events',
+      target: 'supabase',
+      sourceHandle: 'right-top',
+      targetHandle: 'left-top',
+      data: { label: 'upsert events' },
+    },
+    {
+      id: 'e-supa-front',
+      source: 'supabase',
+      target: 'frontend',
+      sourceHandle: 'right-top',
+      targetHandle: 'left-top',
+      data: { label: 'REST query' },
     },
   ];
 }
 
-var layout = null;
-var status = '';
-var hasDelegated = false;
+// --- Helpers ---
 
-function stepLabel(n) {
-  return String(n - (hasDelegated ? 1 : 0));
+function saveLayout() {
+  window.saveLayout();
+}
+
+function responsive(small, large) {
+  return mediaSize.sizeIndex <= 2 ? small : large;
 }

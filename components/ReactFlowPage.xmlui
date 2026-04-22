@@ -1,8 +1,9 @@
 <Component name="ReactFlowPage" var.edgeLabel="" var.edgeId="">
+
   <ModalDialog id="edgeInfoDialog" title="{edgeLabel}">
     <VStack gap="$space-2">
       <Text>
-        Relationship: {edgeLabel}
+        {edgeLabel}
       </Text>
       <Text fontSize="$fontSize-small" color="$textColor-secondary">
         Edge ID: {edgeId}
@@ -10,90 +11,128 @@
     </VStack>
   </ModalDialog>
 
-  <ModalDialog id="sdBaseInfo" title="SD-BASE">
-    <Markdown>
-      <![CDATA[
-The base level 'service delivery relationship' agreement is a very important piece of the MyTerms story. It is the base/default relationship agreement that should be in place for any individual using an agent to propose a MyTerms agreement to an organisation.
-      ]]>
-    </Markdown>
-  </ModalDialog>
-
-  <ModalDialog id="pdcAiInfo" title="PDC-AI">
-    <Markdown>
-      <![CDATA[
-An agreement that indicates you are willing to provide access to specific data under your control for the purposes of Training and Operating AI technologies.
-      ]]>
-    </Markdown>
-  </ModalDialog>
-
-  <ModalDialog id="agreementsDialog" title="Possible MyTerms Agreements">
+  <ModalDialog id="feedsDetailDialog" title="ICS Feed Sources">
     <VStack gap="$space-2">
       <Text fontSize="$fontSize-small" color="$textColor-secondary">
-        Public Website
+        Native iCalendar feeds from venues and organizations. The preferred source type — structured, reliable, and maintained by event producers.
       </Text>
-      <HStack verticalAlignment="center" gap="$space-1">
-        <Text>
-          SD-BASE
-        </Text>
-        <Icon
-          name="info"
-          tooltip="SD-BASE details"
-          width="14px"
-          height="14px"
-          color="$color-primary"
-          cursor="pointer"
-          onClick="sdBaseInfo.open()" />
-      </HStack>
-      <HStack verticalAlignment="center" gap="$space-1">
-        <Text>
-          PDC-AI
-        </Text>
-        <Icon
-          name="info"
-          tooltip="PDC-AI details"
-          width="14px"
-          height="14px"
-          color="$color-primary"
-          cursor="pointer"
-          onClick="pdcAiInfo.open()" />
-      </HStack>
+      <Text fontSize="$fontSize-small">
+        47 active feeds across 9 cities. Each feed is an HTTP URL returning .ics data that the pipeline downloads daily.
+      </Text>
     </VStack>
   </ModalDialog>
 
-  <ModalDialog id="auditTrailDialog" title="Audit Trail">
+  <ModalDialog id="scrapersDetailDialog" title="Web Scrapers">
     <VStack gap="$space-2">
-      <Text fontWeight="bold">
-        Signed Agreement: {offeredTerm}
-      </Text>
       <Text fontSize="$fontSize-small" color="$textColor-secondary">
-        Both parties have signed. Identical copies stored:
+        Python scripts that extract events from websites without ICS feeds. Built on reusable base classes for common platforms.
       </Text>
-      <HStack gap="$space-2">
-        <VStack gap="$space-1">
-          <Text fontWeight="bold" fontSize="$fontSize-small">
-            Alice
-          </Text>
-          <Text fontSize="$fontSize-small">
-            Stored in personal data store
-          </Text>
-          <Text fontSize="$fontSize-small" color="$color-success">
-            Verified
-          </Text>
-        </VStack>
-        <VStack gap="$space-1">
-          <Text fontWeight="bold" fontSize="$fontSize-small">
-            Kleindorfers
-          </Text>
-          <Text fontSize="$fontSize-small">
-            Stored in entity data store
-          </Text>
-          <Text fontSize="$fontSize-small" color="$color-success">
-            Verified
-          </Text>
-        </VStack>
-      </HStack>
+      <Text fontSize="$fontSize-small">
+        120+ site-specific scrapers. Reusable adapters for Eventbrite, Squarespace, Ticketmaster, Legistar (government), BookManager, and more. Each outputs standard .ics with X-SOURCE headers.
+      </Text>
+    </VStack>
+  </ModalDialog>
+
+  <ModalDialog id="curatorDetailDialog" title="Curator Picks">
+    <VStack gap="$space-2">
       <Text fontSize="$fontSize-small" color="$textColor-secondary">
-        Public record available on Public Website
+        User-contributed personal event picks. Curators add events they know about that aren't covered by feeds or scrapers.
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Submitted via the my-picks edge function. Curators can add rrule (recurrence) and category overrides via event_enrichments.
+      </Text>
+    </VStack>
+  </ModalDialog>
+
+  <ModalDialog id="combineDetailDialog" title="combine_ics.py">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        Merges all .ics files per city, applies geo-filtering, and runs two rounds of deduplication.
+      </Text>
+      <Text fontSize="$fontSize-small" fontWeight="bold">
+        Cross-source dedup
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Identical title + date from different sources → merge. X-SOURCE headers concatenated.
+      </Text>
+      <Text fontSize="$fontSize-small" fontWeight="bold">
+        Fuzzy dedup
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Token-set string similarity (threshold 0.85). Union-find algorithm assigns cluster IDs. Different locations never clustered.
+      </Text>
+    </VStack>
+  </ModalDialog>
+
+  <ModalDialog id="jsonDetailDialog" title="ics_to_json.py">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        Parses combined.ics with proper timezone handling (per city.conf), runs fuzzy title clustering, and carries forward categories from previous builds.
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Output: events.json with 1000-5000 events per city. Each event has title, start/end times, location, description, source attribution, and cluster_id.
+      </Text>
+    </VStack>
+  </ModalDialog>
+
+  <ModalDialog id="classifierDetailDialog" title="Claude AI Classifier">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        Uses Claude Haiku to categorize uncategorized events into standard buckets. Only classifies events that don't already have categories (carried forward from prior builds).
+      </Text>
+      <Text fontSize="$fontSize-small" fontWeight="bold">
+        Categories
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Music &amp; Concerts, Arts &amp; Culture, Sports &amp; Recreation, Community, Government, Nightlife, Education, Food &amp; Drink, Health &amp; Wellness, Family, and more.
+      </Text>
+    </VStack>
+  </ModalDialog>
+
+  <ModalDialog id="loadDetailDialog" title="load-events Edge Function">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        Deno/TypeScript function deployed to Supabase. Receives {city, events[]} and upserts into the events table.
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Dedup by UNIQUE(source, source_uid). Deletes events no longer in the feed. Returns {success, inserted, deleted}.
+      </Text>
+    </VStack>
+  </ModalDialog>
+
+  <ModalDialog id="supabaseDetailDialog" title="Supabase (PostgreSQL)">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" fontWeight="bold">
+        events table
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Raw event records — one per source. Columns: title, start_time, end_time, location, description, url, city, source, category, image_url, all_day.
+      </Text>
+      <Text fontSize="$fontSize-small" fontWeight="bold">
+        deduplicated_events (materialized view)
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Groups by city + normalized_title + start_time. Aggregates source list, merges IDs. The frontend queries this view, not the raw table.
+      </Text>
+      <Text fontSize="$fontSize-small" fontWeight="bold">
+        Row Level Security
+      </Text>
+      <Text fontSize="$fontSize-small">
+        events: public SELECT. picks: authenticated users own rows only. feeds: admin write, public read.
+      </Text>
+    </VStack>
+  </ModalDialog>
+
+  <ModalDialog id="frontendDetailDialog" title="XMLUI Frontend">
+    <VStack gap="$space-2">
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        Declarative XMLUI app hosted on GitHub Pages. Queries deduplicated_events via Supabase REST API.
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Features: client-side search with scoring, category filtering, pagination, personal picks (saved to Supabase with RLS), event capture from poster images or audio via Claude/Whisper, list/grid/grouped layouts.
+      </Text>
+      <Text fontSize="$fontSize-small">
+        Auth: GitHub OAuth via Supabase. Admin gating via UUID allowlist table.
       </Text>
     </VStack>
   </ModalDialog>
@@ -103,32 +142,47 @@ An agreement that indicates you are willing to provide access to specific data u
     url="layout.json"
     onLoaded="{(data) => { layout = data }}" />
 
-  <ChangeListener
-    listenTo="{pulse.active}"
-    onDidChange="{() => { if (!pulse.active && phase === 'sending') { cleanupSendEdge(); phase = 4; phaseLabel = stepLabel(4); phaseMessage = 'Alice\u0027s agent proffers agreement'; buttonLabel = 'Proffer'; buttonEnabled = true } if (!pulse.active && phase === 'proffering') { phase = 5; phaseLabel = stepLabel(5); phaseMessage = 'Kleindorfer\u0027s agent consults policy'; buttonLabel = 'Consult Policy'; buttonEnabled = true } }}" />
-
-  <ChangeListener
-    listenTo="{offeredTerm}"
-    onDidChange="{() => { if (offeredTerm !== '') { sendTerm() } }}" />
+  <!-- Phase transition timers -->
 
   <Timer
-    enabled="{pulse.active}"
+    enabled="{phase === 'collecting'}"
     interval="{pulseDuration}"
-    onTick="{() => { if (pulse.step < pulse.edges.length) { canvas.pulseEdge(pulse.edges[pulse.step], pulseDuration); pulse = { active: true, edges: pulse.edges, step: pulse.step + 1, currentEdge: pulse.edges[pulse.step] } } else { canvas.clearPulse(); pulse = { active: false, edges: pulse.edges, step: pulse.step, currentEdge: pulse.currentEdge } } }}" />
-
-  <ChangeListener
-    listenTo="{pulse.currentEdge}"
-    onDidChange="{(change) => onPulseEdgeChange(change)}" />
+    onTick="{() => onCollectDone()}" />
 
   <Timer
-    enabled="{phase === 'delegating'}"
+    enabled="{phase === 'combining'}"
     interval="{pulseDuration}"
-    onTick="{() => { phase = 1; phaseLabel = stepLabel(2); phaseMessage = 'Alice looks up terms'; buttonLabel = 'Lookup'; buttonEnabled = true }}" />
+    onTick="{() => onCombineDone()}" />
+
+  <Timer
+    enabled="{phase === 'converting'}"
+    interval="{pulseDuration}"
+    onTick="{() => onConvertDone()}" />
+
+  <Timer
+    enabled="{phase === 'classifying'}"
+    interval="{pulseDuration}"
+    onTick="{() => onClassifyDone()}" />
+
+  <Timer
+    enabled="{phase === 'loading'}"
+    interval="{pulseDuration}"
+    onTick="{() => onLoadDone()}" />
+
+  <Timer
+    enabled="{phase === 'refreshing'}"
+    interval="{pulseDuration}"
+    onTick="{() => onRefreshDone()}" />
 
   <Timer
     enabled="{roundTrip !== ''}"
     interval="{pulseDuration * 2}"
     onTick="{() => onRoundTripComplete()}" />
+
+  <Timer
+    enabled="{phase === 'displaying'}"
+    interval="{pulseDuration}"
+    onTick="{() => onDisplayDone()}" />
 
   <Stack
     height="calc(100vh - 48px)"
@@ -137,21 +191,26 @@ An agreement that indicates you are willing to provide access to specific data u
     position="relative">
     <ReactFlowCanvas
       id="canvas"
-      canvasFontSize="{18}"
+      canvasFontSize="{16}"
       fitView="{true}"
-      fitViewPadding="{.15}"
+      fitViewPadding="{.12}"
       snapToGrid="{true}"
       showMinimap="{false}"
       showControls="{true}"
       showBackground="{true}"
-      onEdgeInfoClick="{(e) => { if (e.edgeId === 'e-pa-ea') { agreementsDialog.open() } else if (e.edgeId === 'e-signed') { auditTrailDialog.open() } else { edgeLabel = e.label; edgeId = e.edgeId; edgeInfoDialog.open() } }}"
-      nodes="{(phase, phaseLabel, phaseMessage, buttonLabel, buttonEnabled, pulse.active, pulse.currentEdge, offeredTerm, agreementDecision, agreementCount, acceptedCount, aliceDataStore.length, kleindorfersDataStore.length, getNodes())}"
+      onEdgeInfoClick="{(e) => { edgeLabel = e.label; edgeId = e.edgeId; edgeInfoDialog.open() }}"
+      nodes="{(phase, phaseLabel, phaseMessage, buttonLabel, buttonEnabled, getNodes())}"
       edges="{getEdges()}">
-      <PersonNode />
-      <PersonAgentNode />
-      <AgreementsPanel />
-      <EntityAgentNode />
-      <EntityNode />
+      <IcsFeedsNode />
+      <ScrapersNode />
+      <CuratorNode />
+      <GitHubActionsNode />
+      <CombineNode />
+      <IcsToJsonNode />
+      <ClassifierNode />
+      <LoadEventsNode />
+      <SupabaseNode />
+      <FrontendNode />
       <HStack>
         <H1>
           {phaseLabel} {phaseMessage}

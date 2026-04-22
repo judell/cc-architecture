@@ -1,0 +1,41 @@
+<Component name="GitHubActionsNode">
+  <VStack gap="$space-1" padding="$space-2">
+    <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
+      <Text fontSize="$fontSize-lg">⚙️</Text>
+      <Text fontWeight="bold" fontSize="$fontSize-md">GitHub Actions</Text>
+    </HStack>
+    <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
+      Daily automated pipeline
+    </Text>
+    <Text
+      fontSize="$fontSize-small"
+      color="$color-primary"
+      fontWeight="bold"
+      textAlign="center"
+      when="{phase === 'collecting'}">
+      Collecting sources...
+    </Text>
+    <Text
+      fontSize="$fontSize-small"
+      color="$color-success"
+      textAlign="center"
+      when="{phase >= 1 &amp;&amp; phase !== 'collecting'}">
+      ✓ Sources collected
+    </Text>
+    <Text
+      fontSize="$fontSize-small"
+      color="$color-primary"
+      fontWeight="bold"
+      textAlign="center"
+      when="{phase === 'combining' || phase === 'converting' || phase === 'classifying'}">
+      Processing...
+    </Text>
+    <Text
+      fontSize="$fontSize-small"
+      color="$color-success"
+      textAlign="center"
+      when="{phase >= 4}">
+      ✓ Pipeline complete
+    </Text>
+  </VStack>
+</Component>
