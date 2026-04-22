@@ -2,7 +2,7 @@
   <ModalDialog id="loadDetailDialog" title="load-events Edge Function">
     <VStack gap="$space-2">
       <Text fontSize="$fontSize-small" color="$textColor-secondary">
-        Deno/TypeScript function deployed to Supabase. Receives {city, events[]} and upserts into the events table.
+        Deno/TypeScript function deployed to Supabase. Receives a city and events array and upserts into the events table.
       </Text>
       <Text fontSize="$fontSize-small">
         Dedup by UNIQUE(source, source_uid). Deletes events no longer in the feed. Returns {success, inserted, deleted}.
