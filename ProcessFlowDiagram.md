@@ -589,11 +589,12 @@ In other words, `cc-architecture` validates the basic wrapper and step-orchestra
 
 ## Suggested Implementation Sequence
 
-1. Add explicit node-id template binding to `xmlui-react-flow`.
-2. Add pulse lifecycle events so step completion can stop depending on guessed timers.
-3. Implement `ProcessFlowDiagram` as a new package layered on top of `xmlui-react-flow`.
-4. Migrate `cc-architecture` first because it is the simpler linear case.
-5. Migrate `myterms` second to force support for branching and transient-edge workflows.
+1. ~~Add explicit node-id template binding to `xmlui-react-flow`.~~ Done.
+2. ~~Add pulse lifecycle events so step completion can stop depending on guessed timers.~~ Done.
+3. ~~Implement `ProcessFlowDiagram` as a component in `xmlui-react-flow`.~~ Done (merged into single package).
+4. ~~Migrate `cc-architecture` first because it is the simpler linear case.~~ Done (harness working).
+5. ~~Set up `myterms` harness with side-by-side routing.~~ Done.
+6. Migrate `myterms` — this will force support for branching, transient edges, and richer runtime.
 
 ## Current Status
 
@@ -632,82 +633,46 @@ With the current restored bridge in `cc-architecture/components/ProcessFlowDiagr
 
 ### What changed in `xmlui`
 
-Implemented or scaffolded so far:
+Implemented so far:
 
-- added `packages/xmlui-process-flow`
-- added the first `ProcessFlowDiagram` component
+- `ProcessFlowDiagram` and `NodeTemplate` merged into `xmlui-react-flow` (single package)
 - exported `ReactFlowCanvasRender` from `xmlui-react-flow`
 - added package export metadata to `xmlui-react-flow`
 - fixed `xmlui build-lib` so standalone UMD bundles use `window.jsxRuntime`
-- added pulse lifecycle callbacks in `xmlui-react-flow`
+- added pulse lifecycle callbacks (`onPulseStep`, `onPulseComplete`)
 - added semantic node-id binding support through `NodeTemplate`
-- prototyped a diagram-scoped runtime context via `$diagram`
+- `ProcessFlowDiagram` uses `customRender` + MemoizedItem-style Container pattern for context var injection
+- fixed `getPointAtLength` guard for edges with non-default `labelPosition`
+- removed children-refresh effect that caused infinite re-render loop
+
+### Packaging resolution
+
+`ProcessFlowDiagram` was originally in a separate `xmlui-process-flow` package. This caused bundle duplication: both bundles contained their own copy of `ReactFlowCanvasRender`, and loading both on the same page caused component registration collisions.
+
+Resolution: merged `ProcessFlowDiagram` and `NodeTemplate` into `xmlui-react-flow`. One bundle, one script tag, no duplication. The merged bundle is only ~12KB larger than react-flow alone.
+
+Apps no longer need `xmlui-process-flow.js` in their `index.html`.
 
 ### Checkpoints
 
 Recent checkpoint commits:
 
 - `xmlui`
+  - `645dd744f` `Merge ProcessFlowDiagram into xmlui-react-flow and fix render loop`
   - `39d23bb51` `Add node-id binding for process flow nodes`
-  - `b3686c30a` `Prototype diagram runtime context for process flow`
 - `cc-architecture`
-  - `8b63ddf` `Use node-bound templates in process flow harness`
+  - `49202b8` `Update harness to single react-flow bundle with ProcessFlowDiagram`
   - `93d0fc5` `Restore harness phase bridge for process flow`
+- `myterms`
+  - `7fddbff` `Add process-flow harness with side-by-side routing`
 
-These are useful waypoints:
+### Reactivity boundary (resolved as adapter)
 
-- node-id template binding is verified
-- the `$diagram` prototype exists in `xmlui`
-- the harness is back on a known-good working path
+The pure `$diagram` context variable path does not drive XMLUI reactivity because `ProcessFlowDiagram` manages step/phase state as internal React state. XMLUI's expression engine only re-evaluates when XMLUI-visible variables change. Internal React state changes are invisible to XMLUI.
 
-### Current challenge
+The MemoizedItem/Container pattern correctly injects `$diagram` into the XMLUI scope, but XMLUI expressions don't re-evaluate because the state changes never flow through XMLUI's change detection.
 
-The remaining blocker is no longer basic routing, tracing, or step orchestration. It is the pure diagram-scoped reactivity path.
-
-What we wanted:
-
-- node templates should react to `$diagram.phase`
-- `ProcessFlowDiagram` should not need the page-global `phase` bridge
-- `ProcessFlowDiagramPage.xmlui` should not need:
-  - `onPhaseChange="{(e) => { phase = e.phase }}"`
-  - `nodes="{(phase, getNodes()...)}"`
-
-What we found:
-
-- if the bridge is removed, behavior regresses immediately
-- traces then show only `native:*` events and no `data:bind`
-- restoring the bridge brings `data:bind` back and restores behavior
-
-So the unresolved problem is specifically:
-
-- XMLUI node template reactivity is not yet being driven correctly by the pure `$diagram` path
-
-### Diagnostic result so far
-
-Targeted trace instrumentation narrowed the failure seam.
-
-What the diagnostic traces show:
-
-- `ReactFlowCanvas` does see template churn
-- `NodeTemplate` does get invoked many times
-- but inside `NodeTemplate.customRender`, the expected renderer context variables are not visible where we first tried to read them
-- in the diagnostic trace, `NodeTemplate` repeatedly reports:
-  - `current=-`
-  - `phase=-`
-
-That means:
-
-- the failure is not “template never re-renders”
-- the failure is not just “canvas never refreshes children”
-- the failure is at the point where node-specific XMLUI render context should become visible to `NodeTemplate`
-
-### Practical current stance
-
-For now:
-
-- keep the bridge on in the `cc-architecture` harness
-- continue debugging the pure `$diagram` path inside `xmlui`
-- do not keep destabilizing the harness while the substrate issue is still unresolved
+Resolution: treat the `onPhaseChange` bridge as an intentional XMLUI reactivity adapter (Option 1). Plan XMLUI-managed state as a future redesign (Option 2) if ProcessFlowDiagram proves valuable enough.
 
 ### Adapter framing
 
@@ -743,11 +708,21 @@ So for V1 the architecture is:
 
 This is acceptable for forward progress even though it is not yet the final self-contained form.
 
+### myterms harness
+
+A parallel harness now exists in `myterms` on the `judell/process-flow-harness` branch:
+
+- `/` runs the legacy `ReactFlowPage` (unchanged)
+- `/process-flow` runs `ProcessFlowDiagramPage` with ProcessFlowDiagram
+- the delegate step is fully wired with parallel pulse effects
+- remaining steps (lookup, send, proffer, consult, verify, done) are declared as placeholders
+- those steps need framework extensions: transient edge effects, round-trip completion, pulse sequences, state-predicate branching, node-driven events
+
 ### Still temporary
 
-- the `cc-architecture` harness still loads copied extension bundles rather than a smoother dev workflow
-- the standalone harness still needs `window.process` and `window.require` shims in `index.html`
-- the pure `$diagram` runtime exists conceptually, but is not yet the sole source of node reactivity
+- both harnesses still load copied extension bundles rather than a smoother dev workflow
+- the standalone harnesses still need `window.process` and `window.require` shims in `index.html`
+- the adapter bridge is required; the pure `$diagram` path is not yet the sole source of node reactivity
 
 ## Later TODO
 
