@@ -1,4 +1,4 @@
-<Component name="ClassifierNode">
+<Component name="ClassifierNode" var.currentPhase="{($diagram && $diagram.phase !== undefined) ? $diagram.phase : phase}">
   <ModalDialog id="classifierDetailDialog" title="Claude AI Classifier">
     <VStack gap="$space-2">
       <Text fontSize="$fontSize-small" color="$textColor-secondary">
@@ -28,15 +28,15 @@
     </Text>
     <Text
       fontSize="$fontSize-small"
-      when="{phase &lt; 3}"
+      when="{currentPhase &lt; 3}"
       color="$textColor-secondary"
       textAlign="center">
       Waiting for input...
     </Text>
     <Table
-      data="{phase >= 4 ? sampleClassified : []}"
+      data="{currentPhase >= 4 ? sampleClassified : []}"
       fontSize="$fontSize-small"
-      when="{phase >= 4}"
+      when="{currentPhase >= 4}"
       noDataTemplate="">
       <Column bindTo="title" header="Event" width="2*" />
       <Column bindTo="category" header="Category" />

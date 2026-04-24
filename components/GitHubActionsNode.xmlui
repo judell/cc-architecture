@@ -1,4 +1,4 @@
-<Component name="GitHubActionsNode">
+<Component name="GitHubActionsNode" var.currentPhase="{($diagram && $diagram.phase !== undefined) ? $diagram.phase : phase}">
   <VStack gap="$space-1" padding="$space-2">
     <HStack verticalAlignment="center" horizontalAlignment="center" gap="$space-2">
       <Text fontSize="$fontSize-lg">⚙️</Text>
@@ -12,14 +12,14 @@
       color="$color-primary"
       fontWeight="bold"
       textAlign="center"
-      when="{phase === 'collecting'}">
+      when="{currentPhase === 'collecting'}">
       Collecting sources...
     </Text>
     <Text
       fontSize="$fontSize-small"
       color="$color-success"
       textAlign="center"
-      when="{phase >= 1 &amp;&amp; phase !== 'collecting'}">
+      when="{currentPhase >= 1 &amp;&amp; currentPhase !== 'collecting'}">
       ✓ Sources collected
     </Text>
     <Text
@@ -27,14 +27,14 @@
       color="$color-primary"
       fontWeight="bold"
       textAlign="center"
-      when="{phase === 'combining' || phase === 'converting' || phase === 'classifying'}">
+      when="{currentPhase === 'combining' || currentPhase === 'converting' || currentPhase === 'classifying'}">
       Processing...
     </Text>
     <Text
       fontSize="$fontSize-small"
       color="$color-success"
       textAlign="center"
-      when="{phase >= 4}">
+      when="{currentPhase >= 4}">
       ✓ Pipeline complete
     </Text>
   </VStack>

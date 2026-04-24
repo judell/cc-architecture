@@ -1,4 +1,4 @@
-<Component name="IcsFeedsNode">
+<Component name="IcsFeedsNode" var.currentPhase="{($diagram && $diagram.phase !== undefined) ? $diagram.phase : phase}">
   <ModalDialog id="feedsDetailDialog" title="ICS Feed Sources">
     <VStack gap="$space-2">
       <Text fontSize="$fontSize-small" color="$textColor-secondary">
@@ -24,9 +24,9 @@
       47 active feeds · 9 cities
     </Text>
     <Table
-      data="{phase >= 1 ? sampleFeeds : []}"
+      data="{currentPhase >= 1 ? sampleFeeds : []}"
       fontSize="$fontSize-small"
-      when="{phase >= 1}"
+      when="{currentPhase >= 1}"
       noDataTemplate="">
       <Column bindTo="name" header="Feed" width="2*" />
       <Column bindTo="city" header="City" />

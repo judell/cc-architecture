@@ -1,4 +1,4 @@
-<Component name="CombineNode">
+<Component name="CombineNode" var.currentPhase="{($diagram && $diagram.phase !== undefined) ? $diagram.phase : phase}">
   <ModalDialog id="combineDetailDialog" title="combine_ics.py">
     <VStack gap="$space-2">
       <Text fontSize="$fontSize-small" color="$textColor-secondary">
@@ -28,12 +28,12 @@
     </Text>
     <Text
       fontSize="$fontSize-small"
-      when="{phase === 0}"
+      when="{currentPhase === 0}"
       color="$textColor-secondary"
       textAlign="center">
       Waiting for input...
     </Text>
-    <VStack when="{phase >= 2}" gap="$space-1">
+    <VStack when="{currentPhase >= 2}" gap="$space-1">
       <Text fontSize="$fontSize-small" textAlign="center">
         7 events in, 2 dupes merged
       </Text>

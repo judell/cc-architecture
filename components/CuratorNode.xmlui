@@ -1,4 +1,4 @@
-<Component name="CuratorNode">
+<Component name="CuratorNode" var.currentPhase="{($diagram && $diagram.phase !== undefined) ? $diagram.phase : phase}">
   <ModalDialog id="curatorDetailDialog" title="Curator Picks">
     <VStack gap="$space-2">
       <Text fontSize="$fontSize-small" color="$textColor-secondary">
@@ -24,9 +24,9 @@
       User-contributed events
     </Text>
     <Table
-      data="{phase >= 1 ? samplePicks : []}"
+      data="{currentPhase >= 1 ? samplePicks : []}"
       fontSize="$fontSize-small"
-      when="{phase >= 1}"
+      when="{currentPhase >= 1}"
       noDataTemplate="">
       <Column bindTo="title" header="Event" width="2*" />
       <Column bindTo="curator" header="By" />

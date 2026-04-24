@@ -1,4 +1,4 @@
-<Component name="ScrapersNode">
+<Component name="ScrapersNode" var.currentPhase="{($diagram && $diagram.phase !== undefined) ? $diagram.phase : phase}">
   <ModalDialog id="scrapersDetailDialog" title="Web Scrapers">
     <VStack gap="$space-2">
       <Text fontSize="$fontSize-small" color="$textColor-secondary">
@@ -24,9 +24,9 @@
       120+ scripts · reusable adapters
     </Text>
     <Table
-      data="{phase >= 1 ? sampleScrapers : []}"
+      data="{currentPhase >= 1 ? sampleScrapers : []}"
       fontSize="$fontSize-small"
-      when="{phase >= 1}"
+      when="{currentPhase >= 1}"
       noDataTemplate="">
       <Column bindTo="name" header="Script" width="2*" />
       <Column bindTo="platform" header="Platform" />

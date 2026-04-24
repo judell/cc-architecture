@@ -1,4 +1,4 @@
-<Component name="SupabaseNode">
+<Component name="SupabaseNode" var.currentPhase="{($diagram && $diagram.phase !== undefined) ? $diagram.phase : phase}">
   <ModalDialog id="supabaseDetailDialog" title="Supabase (PostgreSQL)">
     <VStack gap="$space-2">
       <Text fontSize="$fontSize-small" fontWeight="bold">
@@ -32,12 +32,12 @@
         ⓘ
       </Text>
     </HStack>
-    <VStack when="{phase &lt; 5}" gap="$space-1">
+    <VStack when="{currentPhase &lt; 5}" gap="$space-1">
       <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
         PostgreSQL, RLS, Edge Functions
       </Text>
     </VStack>
-    <VStack when="{phase >= 5}" gap="$space-1">
+    <VStack when="{currentPhase >= 5}" gap="$space-1">
       <Text fontSize="$fontSize-small" fontWeight="bold">events table</Text>
       <Text fontSize="$fontSize-small">
         {sampleRawEvents.length} raw records loaded
@@ -45,13 +45,13 @@
       <Text
         fontSize="$fontSize-small"
         fontWeight="bold"
-        when="{phase >= 6}">
+        when="{currentPhase >= 6}">
         deduplicated_events
       </Text>
       <Table
-        data="{phase >= 6 ? sampleDeduped : []}"
+        data="{currentPhase >= 6 ? sampleDeduped : []}"
         fontSize="$fontSize-small"
-        when="{phase >= 6}"
+        when="{currentPhase >= 6}"
         noDataTemplate="">
         <Column bindTo="title" header="Event" width="2*" />
         <Column bindTo="category" header="Cat" />
