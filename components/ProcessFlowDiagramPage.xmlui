@@ -1,0 +1,108 @@
+<Component name="ProcessFlowDiagramPage" var.edgeLabel="" var.edgeId="">
+
+  <ModalDialog id="edgeInfoDialog" title="{edgeLabel}">
+    <VStack gap="$space-2">
+      <Text>
+        {edgeLabel}
+      </Text>
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        Edge ID: {edgeId}
+      </Text>
+    </VStack>
+  </ModalDialog>
+
+  <DataSource
+    id="layoutData"
+    url="layout.json"
+    onLoaded="{(data) => { layout = data }}" />
+
+  <Timer
+    enabled="{phase === 'collecting'}"
+    interval="{pulseDuration}"
+    onTick="{() => onCollectDone()}" />
+
+  <Timer
+    enabled="{phase === 'combining'}"
+    interval="{pulseDuration}"
+    onTick="{() => onCombineDone()}" />
+
+  <Timer
+    enabled="{phase === 'converting'}"
+    interval="{pulseDuration}"
+    onTick="{() => onConvertDone()}" />
+
+  <Timer
+    enabled="{phase === 'classifying'}"
+    interval="{pulseDuration}"
+    onTick="{() => onClassifyDone()}" />
+
+  <Timer
+    enabled="{phase === 'loading'}"
+    interval="{pulseDuration}"
+    onTick="{() => onLoadDone()}" />
+
+  <Timer
+    enabled="{phase === 'refreshing'}"
+    interval="{pulseDuration}"
+    onTick="{() => onRefreshDone()}" />
+
+  <Timer
+    enabled="{roundTrip !== ''}"
+    interval="{pulseDuration * 2}"
+    onTick="{() => onRoundTripComplete()}" />
+
+  <Timer
+    enabled="{phase === 'displaying'}"
+    interval="{pulseDuration}"
+    onTick="{() => onDisplayDone()}" />
+
+  <Stack
+    height="calc(100vh - 48px)"
+    width="100%"
+    when="{layout !== null}"
+    position="relative">
+    <VStack
+      position="absolute"
+      top="$space-2"
+      right="$space-2"
+      zIndex="30"
+      backgroundColor="rgba(255,255,255,0.92)"
+      border="1px solid $borderColor"
+      borderRadius="$borderRadius-md"
+      padding="$space-2"
+      gap="$space-1">
+      <Text fontWeight="bold" fontSize="$fontSize-small">
+        Process Flow Route
+      </Text>
+      <Text fontSize="$fontSize-small" color="$textColor-secondary">
+        Path: {$pathname}
+      </Text>
+    </VStack>
+    <ProcessFlowDiagram
+      fitView="{true}"
+      fitViewPadding="{.12}"
+      snapToGrid="{true}"
+      showMinimap="{false}"
+      showControls="{true}"
+      showBackground="{true}"
+      title="{phaseLabel}"
+      message="{phaseMessage}"
+      actionLabel="{buttonLabel}"
+      actionEnabled="{buttonEnabled}"
+      onAction="{() => nextStep()}"
+      onEdgeInfoClick="{(e) => { edgeLabel = e.label; edgeId = e.edgeId; edgeInfoDialog.open() }}"
+      nodes="{(phase, phaseLabel, phaseMessage, buttonLabel, buttonEnabled, getNodes().filter((n) => n.id !== 'control'))}"
+      edges="{getEdges()}">
+      <IcsFeedsNode />
+      <ScrapersNode />
+      <CuratorNode />
+      <GitHubActionsNode />
+      <CombineNode />
+      <IcsToJsonNode />
+      <ClassifierNode />
+      <LoadEventsNode />
+      <SupabaseNode />
+      <FrontendNode />
+    </ProcessFlowDiagram>
+  </Stack>
+</Component>

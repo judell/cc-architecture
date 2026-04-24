@@ -6,7 +6,19 @@
   <title>Community Calendar Architecture</title>
   <script>window.__cb = Date.now();</script>
   <script>document.write('<script src="xmlui/xmlui-standalone.umd.js?v=' + __cb + '"><\/script>');</script>
+  <script>
+    window.react_jsx_runtime = window.react_jsx_runtime || window.jsxRuntime;
+    window.process = window.process || { env: { NODE_ENV: "production" } };
+    window.require = window.require || function(name) {
+      if (name === "react") return window.React;
+      if (name === "react-dom") return window.ReactDOM;
+      if (name === "react/jsx-runtime") return window.react_jsx_runtime || window.jsxRuntime;
+      if (name === "xmlui") return window.xmlui;
+      throw new Error("Unsupported standalone require: " + name);
+    };
+  </script>
   <script>document.write('<script src="xmlui/xmlui-react-flow.js?v=' + __cb + '"><\/script>');</script>
+  <script>document.write('<script src="xmlui/xmlui-process-flow.js?v=' + __cb + '"><\/script>');</script>
   <link rel="stylesheet" href="xmlui/xmlui-react-flow.css">
   <style>
     .react-flow__handle { opacity: 0; pointer-events: none; }
