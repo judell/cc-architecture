@@ -50,16 +50,36 @@
       onEdgeInfoClick="{(e) => { edgeLabel = e.label; edgeId = e.edgeId; edgeInfoDialog.open() }}"
       nodes="{(phase, getNodes().filter((n) => n.id !== 'control'))}"
       edges="{getEdges()}">
-      <IcsFeedsNode />
-      <ScrapersNode />
-      <CuratorNode />
-      <GitHubActionsNode />
-      <CombineNode />
-      <IcsToJsonNode />
-      <ClassifierNode />
-      <LoadEventsNode />
-      <SupabaseNode />
-      <FrontendNode />
+      <NodeTemplate nodeId="ics-feeds">
+        <IcsFeedsNode />
+      </NodeTemplate>
+      <NodeTemplate nodeId="scrapers">
+        <ScrapersNode />
+      </NodeTemplate>
+      <NodeTemplate nodeId="curator">
+        <CuratorNode />
+      </NodeTemplate>
+      <NodeTemplate nodeId="github-actions">
+        <GitHubActionsNode />
+      </NodeTemplate>
+      <NodeTemplate nodeId="combine">
+        <CombineNode />
+      </NodeTemplate>
+      <NodeTemplate nodeId="ics-to-json">
+        <IcsToJsonNode />
+      </NodeTemplate>
+      <NodeTemplate nodeId="classifier">
+        <ClassifierNode />
+      </NodeTemplate>
+      <NodeTemplate nodeId="load-events">
+        <LoadEventsNode />
+      </NodeTemplate>
+      <NodeTemplate nodeId="supabase">
+        <SupabaseNode />
+      </NodeTemplate>
+      <NodeTemplate nodeId="frontend">
+        <FrontendNode />
+      </NodeTemplate>
     </ProcessFlowDiagram>
   </Stack>
 </Component>
