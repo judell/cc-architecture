@@ -1,123 +1,73 @@
-// --- Phase machine ---
+// --- Step machine runtime ---
+// Interprets step declarations from getProcessFlowSteps() and writes to XMLUI globals.
+
+
+function applyStep(index) {
+  const steps = getProcessFlowSteps();
+  const step = steps[index];
+  stepIndex = index;
+  phase = step.phase;
+  phaseLabel = step.title;
+  phaseMessage = step.message;
+  buttonLabel = step.actionLabel;
+  buttonEnabled = step.actionEnabled !== false;
+}
 
 function nextStep() {
-  if (phase === 0) collect();
-  else if (phase === 1) combine();
-  else if (phase === 2) convert();
-  else if (phase === 3) classify();
-  else if (phase === 4) load();
-  else if (phase === 5) refresh();
-  else if (phase === 6) display();
-  else if (phase === 7) startOver();
-}
+  const steps = getProcessFlowSteps();
+  const step = steps[stepIndex];
 
-function collect() {
-  phase = 'collecting';
+  if (step.restartOnAction) {
+    window.__reactFlowCanvasApi.clearPulse();
+    applyStep(0);
+    return;
+  }
+
+  phase = step.runningPhase || step.phase;
   buttonEnabled = false;
-  window.__reactFlowCanvasApi.pulseEdge('download feeds', pulseDuration);
-  window.__reactFlowCanvasApi.pulseEdge('run scrapers', pulseDuration);
-  window.__reactFlowCanvasApi.pulseEdge('collect picks', pulseDuration);
+  running = true;
+
+  const api = window.__reactFlowCanvasApi;
+  if (api) {
+    const effects = step.run || [];
+    for (let i = 0; i < effects.length; i++) {
+      const effect = effects[i];
+      if (effect.type === 'pulse' && effect.edge) {
+        api.pulseEdge(effect.edge, effect.durationMs || pulseDuration);
+      } else if (effect.type === 'pulseRoundTrip' && effect.edge) {
+        api.pulseEdgeRoundTrip(effect.edge, effect.durationMs || pulseDuration);
+      } else if (effect.type === 'clearPulse') {
+        api.clearPulse();
+      } else if (effect.type === 'addEdge') {
+        api.addEdge(effect.id, effect.source, effect.target,
+          effect.sourceHandle, effect.targetHandle, effect.label,
+          effect.noArrow, effect.data);
+      } else if (effect.type === 'removeEdge') {
+        api.removeEdge(effect.edgeId);
+      }
+    }
+  }
 }
 
-function combine() {
-  phase = 'combining';
-  buttonEnabled = false;
-  window.__reactFlowCanvasApi.pulseEdge('per-city .ics', pulseDuration);
+function completeCurrentStep() {
+  running = false;
+  const steps = getProcessFlowSteps();
+  const step = steps[stepIndex];
+  const nextIndex = resolveNextStep(step, stepIndex);
+  applyStep(nextIndex);
 }
 
-function convert() {
-  phase = 'converting';
-  buttonEnabled = false;
-  window.__reactFlowCanvasApi.pulseEdge('combined.ics', pulseDuration);
-}
-
-function classify() {
-  phase = 'classifying';
-  buttonEnabled = false;
-  window.__reactFlowCanvasApi.pulseEdge('events.json', pulseDuration);
-}
-
-function load() {
-  phase = 'loading';
-  buttonEnabled = false;
-  window.__reactFlowCanvasApi.pulseEdge('classified JSON', pulseDuration);
-}
-
-function refresh() {
-  phase = 'refreshing';
-  buttonEnabled = false;
-  window.__reactFlowCanvasApi.pulseEdge('upsert events', pulseDuration);
-}
-
-function display() {
-  phase = 'displaying';
-  buttonEnabled = false;
-  window.__reactFlowCanvasApi.pulseEdge('REST query', pulseDuration);
-}
-
-function startOver() {
-  window.__reactFlowCanvasApi.clearPulse();
-  phase = 0;
-  phaseLabel = '1';
-  phaseMessage = 'Collect from sources';
-  buttonLabel = 'Collect';
-  buttonEnabled = true;
-}
-
-function onCollectDone() {
-  phase = 1;
-  phaseLabel = '2';
-  phaseMessage = 'Combine per-city ICS files';
-  buttonLabel = 'Combine';
-  buttonEnabled = true;
-}
-
-function onCombineDone() {
-  phase = 2;
-  phaseLabel = '3';
-  phaseMessage = 'Convert to JSON & cluster';
-  buttonLabel = 'Convert';
-  buttonEnabled = true;
-}
-
-function onConvertDone() {
-  phase = 3;
-  phaseLabel = '4';
-  phaseMessage = 'Classify with Claude AI';
-  buttonLabel = 'Classify';
-  buttonEnabled = true;
-}
-
-function onClassifyDone() {
-  phase = 4;
-  phaseLabel = '5';
-  phaseMessage = 'Load events to Supabase';
-  buttonLabel = 'Load';
-  buttonEnabled = true;
-}
-
-function onLoadDone() {
-  phase = 5;
-  phaseLabel = '6';
-  phaseMessage = 'Upsert to database';
-  buttonLabel = 'Upsert';
-  buttonEnabled = true;
-}
-
-function onRefreshDone() {
-  phase = 6;
-  phaseLabel = '7';
-  phaseMessage = 'Query & render in frontend';
-  buttonLabel = 'Display';
-  buttonEnabled = true;
-}
-
-function onDisplayDone() {
-  phase = 7;
-  phaseLabel = '';
-  phaseMessage = 'Pipeline complete';
-  buttonLabel = 'Start Over';
-  buttonEnabled = true;
+function resolveNextStep(step, currentIndex) {
+  const steps = getProcessFlowSteps();
+  if (typeof step.next === 'number') {
+    return step.next;
+  }
+  if (typeof step.next === 'string') {
+    for (let i = 0; i < steps.length; i++) {
+      if (steps[i].id === step.next) return i;
+    }
+  }
+  return Math.min(currentIndex + 1, steps.length - 1);
 }
 
 // --- Node & edge builders ---
@@ -220,13 +170,6 @@ function getProcessFlowSteps() {
       clearPulseOnRestart: true,
     },
   ];
-}
-
-function diagramPhase(diagram, fallbackPhase) {
-  if (diagram && diagram.phase !== undefined) {
-    return diagram.phase;
-  }
-  return fallbackPhase;
 }
 
 function makeNode(id, label, chrome) {

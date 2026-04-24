@@ -28,12 +28,12 @@
     </Text>
     <Text
       fontSize="$fontSize-small"
-      when="{diagramPhase($diagram, phase) === 0}"
+      when="{phase === 0}"
       color="$textColor-secondary"
       textAlign="center">
       Waiting for input...
     </Text>
-    <VStack when="{diagramPhase($diagram, phase) >= 2}" gap="$space-1">
+    <VStack when="{phase >= 2}" gap="$space-1">
       <Text fontSize="$fontSize-small" textAlign="center">
         7 events in, 2 dupes merged
       </Text>

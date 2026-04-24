@@ -24,9 +24,9 @@
       47 active feeds · 9 cities
     </Text>
     <Table
-      data="{diagramPhase($diagram, phase) >= 1 ? sampleFeeds : []}"
+      data="{phase >= 1 ? sampleFeeds : []}"
       fontSize="$fontSize-small"
-      when="{diagramPhase($diagram, phase) >= 1}"
+      when="{phase >= 1}"
       noDataTemplate="">
       <Column bindTo="name" header="Feed" width="2*" />
       <Column bindTo="city" header="City" />

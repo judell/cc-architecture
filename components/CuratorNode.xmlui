@@ -24,9 +24,9 @@
       User-contributed events
     </Text>
     <Table
-      data="{diagramPhase($diagram, phase) >= 1 ? samplePicks : []}"
+      data="{phase >= 1 ? samplePicks : []}"
       fontSize="$fontSize-small"
-      when="{diagramPhase($diagram, phase) >= 1}"
+      when="{phase >= 1}"
       noDataTemplate="">
       <Column bindTo="title" header="Event" width="2*" />
       <Column bindTo="curator" header="By" />

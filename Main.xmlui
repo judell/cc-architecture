@@ -7,6 +7,8 @@
   global.buttonLabel="{'Collect'}"
   global.buttonEnabled="{true}"
   global.pulseDuration="{1800}"
+  global.running="{false}"
+  global.stepIndex="{0}"
   global.roundTrip="{''}"
   global.pulse="{{ active: false, edges: [], step: -1, currentEdge: '' }}"
   global.layout="{null}"
@@ -22,14 +24,6 @@
     <Text fontWeight="bold">
       Community Calendar Architecture
     </Text>
-    <NavLink
-      label="Current"
-      to="/"
-      fontSize="$fontSize-small" />
-    <NavLink
-      label="Process Flow"
-      to="/process-flow"
-      fontSize="$fontSize-small" />
     <SpaceFiller />
     <Icon
       name="github"
@@ -55,9 +49,6 @@
   <Pages>
     <Page url="/">
       <ReactFlowPage />
-    </Page>
-    <Page url="/process-flow">
-      <ProcessFlowDiagramPage />
     </Page>
   </Pages>
 

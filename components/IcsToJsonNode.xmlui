@@ -25,12 +25,12 @@
     </Text>
     <Text
       fontSize="$fontSize-small"
-      when="{diagramPhase($diagram, phase) &lt; 2}"
+      when="{phase &lt; 2}"
       color="$textColor-secondary"
       textAlign="center">
       Waiting for input...
     </Text>
-    <VStack when="{diagramPhase($diagram, phase) >= 3}" gap="$space-1">
+    <VStack when="{phase >= 3}" gap="$space-1">
       <Text fontSize="$fontSize-small" textAlign="center">
         Timezone: America/Los_Angeles
       </Text>

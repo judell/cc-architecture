@@ -12,14 +12,14 @@
       color="$color-primary"
       fontWeight="bold"
       textAlign="center"
-      when="{diagramPhase($diagram, phase) === 'collecting'}">
+      when="{phase === 'collecting'}">
       Collecting sources...
     </Text>
     <Text
       fontSize="$fontSize-small"
       color="$color-success"
       textAlign="center"
-      when="{diagramPhase($diagram, phase) >= 1 &amp;&amp; diagramPhase($diagram, phase) !== 'collecting'}">
+      when="{phase >= 1 &amp;&amp; phase !== 'collecting'}">
       ✓ Sources collected
     </Text>
     <Text
@@ -27,14 +27,14 @@
       color="$color-primary"
       fontWeight="bold"
       textAlign="center"
-      when="{diagramPhase($diagram, phase) === 'combining' || diagramPhase($diagram, phase) === 'converting' || diagramPhase($diagram, phase) === 'classifying'}">
+      when="{phase === 'combining' || phase === 'converting' || phase === 'classifying'}">
       Processing...
     </Text>
     <Text
       fontSize="$fontSize-small"
       color="$color-success"
       textAlign="center"
-      when="{diagramPhase($diagram, phase) >= 4}">
+      when="{phase >= 4}">
       ✓ Pipeline complete
     </Text>
   </VStack>

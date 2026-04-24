@@ -24,9 +24,9 @@
       120+ scripts · reusable adapters
     </Text>
     <Table
-      data="{diagramPhase($diagram, phase) >= 1 ? sampleScrapers : []}"
+      data="{phase >= 1 ? sampleScrapers : []}"
       fontSize="$fontSize-small"
-      when="{diagramPhase($diagram, phase) >= 1}"
+      when="{phase >= 1}"
       noDataTemplate="">
       <Column bindTo="name" header="Script" width="2*" />
       <Column bindTo="platform" header="Platform" />

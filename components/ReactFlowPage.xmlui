@@ -16,47 +16,10 @@
     url="layout.json"
     onLoaded="{(data) => { layout = data }}" />
 
-  <!-- Phase transition timers -->
-
   <Timer
-    enabled="{phase === 'collecting'}"
+    enabled="{running}"
     interval="{pulseDuration}"
-    onTick="{() => onCollectDone()}" />
-
-  <Timer
-    enabled="{phase === 'combining'}"
-    interval="{pulseDuration}"
-    onTick="{() => onCombineDone()}" />
-
-  <Timer
-    enabled="{phase === 'converting'}"
-    interval="{pulseDuration}"
-    onTick="{() => onConvertDone()}" />
-
-  <Timer
-    enabled="{phase === 'classifying'}"
-    interval="{pulseDuration}"
-    onTick="{() => onClassifyDone()}" />
-
-  <Timer
-    enabled="{phase === 'loading'}"
-    interval="{pulseDuration}"
-    onTick="{() => onLoadDone()}" />
-
-  <Timer
-    enabled="{phase === 'refreshing'}"
-    interval="{pulseDuration}"
-    onTick="{() => onRefreshDone()}" />
-
-  <Timer
-    enabled="{roundTrip !== ''}"
-    interval="{pulseDuration * 2}"
-    onTick="{() => onRoundTripComplete()}" />
-
-  <Timer
-    enabled="{phase === 'displaying'}"
-    interval="{pulseDuration}"
-    onTick="{() => onDisplayDone()}" />
+    onTick="{() => { completeCurrentStep() }}" />
 
   <Stack
     height="calc(100vh - 48px)"

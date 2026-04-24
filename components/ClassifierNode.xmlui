@@ -28,15 +28,15 @@
     </Text>
     <Text
       fontSize="$fontSize-small"
-      when="{diagramPhase($diagram, phase) &lt; 3}"
+      when="{phase &lt; 3}"
       color="$textColor-secondary"
       textAlign="center">
       Waiting for input...
     </Text>
     <Table
-      data="{diagramPhase($diagram, phase) >= 4 ? sampleClassified : []}"
+      data="{phase >= 4 ? sampleClassified : []}"
       fontSize="$fontSize-small"
-      when="{diagramPhase($diagram, phase) >= 4}"
+      when="{phase >= 4}"
       noDataTemplate="">
       <Column bindTo="title" header="Event" width="2*" />
       <Column bindTo="category" header="Category" />

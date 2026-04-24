@@ -25,12 +25,12 @@
     </Text>
     <Text
       fontSize="$fontSize-small"
-      when="{diagramPhase($diagram, phase) &lt; 4}"
+      when="{phase &lt; 4}"
       color="$textColor-secondary"
       textAlign="center">
       Waiting...
     </Text>
-    <VStack when="{diagramPhase($diagram, phase) >= 5}" gap="$space-1">
+    <VStack when="{phase >= 5}" gap="$space-1">
       <Text fontSize="$fontSize-small" color="$color-success" textAlign="center">
         5 upserted, 0 deleted
       </Text>
