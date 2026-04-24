@@ -222,6 +222,13 @@ function getProcessFlowSteps() {
   ];
 }
 
+function diagramPhase(diagram, fallbackPhase) {
+  if (diagram && diagram.phase !== undefined) {
+    return diagram.phase;
+  }
+  return fallbackPhase;
+}
+
 function makeNode(id, label, chrome) {
   const n = layout.nodes[id] || { x: 0, y: 0, width: 200, height: 150 };
   const data = chrome === false ? { label: label, chrome: false } : { label: label };

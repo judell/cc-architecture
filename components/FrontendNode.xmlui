@@ -1,4 +1,4 @@
-<Component name="FrontendNode" var.currentPhase="{($diagram && $diagram.phase !== undefined) ? $diagram.phase : phase}">
+<Component name="FrontendNode">
   <ModalDialog id="frontendDetailDialog" title="XMLUI Frontend">
     <VStack gap="$space-2">
       <Text fontSize="$fontSize-small" color="$textColor-secondary">
@@ -26,12 +26,12 @@
     <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
       GitHub Pages, Declarative UI
     </Text>
-    <VStack when="{currentPhase &lt; 7}" gap="$space-1">
+    <VStack when="{diagramPhase($diagram, phase) &lt; 7}" gap="$space-1">
       <Text fontSize="$fontSize-small" color="$textColor-secondary" textAlign="center">
         Waiting for data...
       </Text>
     </VStack>
-    <VStack when="{currentPhase >= 7}" gap="$space-2">
+    <VStack when="{diagramPhase($diagram, phase) >= 7}" gap="$space-2">
       <VStack
         gap="$space-1"
         padding="$space-2"

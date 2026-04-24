@@ -448,6 +448,145 @@ Must preserve:
 
 If either app requires large amounts of custom timer wiring after migration, the abstraction is too weak.
 
+## `myterms` Requirements
+
+The `myterms` read-through makes it clear that `ProcessFlowDiagram` needs a richer runtime than the current linear `cc-architecture` model.
+
+`myterms` is not just “more steps.” It requires:
+
+### 1. Dynamic edge lifecycle
+
+The runtime must be able to add and remove edges during the flow, not just pulse fixed edges.
+
+Examples:
+
+- add transient lookup edge `e-p-ag`
+- add transient send edge `e-p-pa-send`
+- add transient consult edge `e-ea-consult`
+- add transient verify edge `e-ea-verify`
+- remove those edges after completion
+- accumulate repeated durable signed edges like `e-signed-1`, `e-signed-2`, etc.
+
+This goes beyond static `edges="{...}"`.
+
+### 2. Round-trip animations as control-flow primitives
+
+`myterms` uses `pulseEdgeRoundTrip()` as part of the process semantics, not just as decoration.
+
+Examples:
+
+- `lookup`
+- `consults policy`
+
+The runtime must be able to:
+
+- start a named round trip
+- know when it completes
+- branch on which round trip just completed
+
+### 3. Multi-edge pulse sequences
+
+`myterms` also uses explicit pulse sequence state:
+
+- `pulse.active`
+- `pulse.edges`
+- `pulse.step`
+- `pulse.currentEdge`
+
+That means `ProcessFlowDiagram` needs something richer than “pulse one edge and wait.”
+
+It likely needs:
+
+- `pulseSequence`
+- `currentPulseEdge`
+- completion when a sequence drains
+
+### 4. State-driven branching
+
+The process branches on domain state, not just on a static step map.
+
+Examples:
+
+- accept vs reject after consulting policy
+- verify path only when agreement was accepted
+- rejected path still writes audit/store state and lands in a terminal step
+
+So the runtime needs first-class branching based on state predicates.
+
+### 5. Diagram-owned mutable state
+
+`myterms` depends on live diagram state beyond a current step id.
+
+Examples:
+
+- `offeredTerm`
+- `agreementDecision`
+- `acceptedCount`
+- store contents for Alice and Kleindorfer's
+- pulse runtime state
+- round-trip runtime state
+
+This implies that `ProcessFlowDiagram` needs a true diagram-state model, not just step metadata plus callbacks.
+
+### 6. Node-driven events
+
+Node-local UI drives the process.
+
+Example:
+
+- selecting `offeredTerm` triggers `sendTerm()`
+
+So node templates need a way to emit facts into the diagram runtime, and the runtime needs to react by:
+
+- mutating state
+- adding/removing edges
+- starting pulses
+- advancing or branching steps
+
+### 7. Repeated-run accumulation
+
+`myterms` does not fully reset to a blank slate every time.
+
+Examples:
+
+- accepted agreements create durable signed edges
+- data-store history accumulates entries
+- `startOver()` resets process position but does not erase the overall story model the same way `cc-architecture` does
+
+So the runtime must support:
+
+- ephemeral state
+- durable-in-session state
+- restart semantics that do not necessarily clear everything
+
+### 8. Modal and edge-specific interaction hooks
+
+`myterms` maps specific edge ids to domain dialogs:
+
+- agreements dialog
+- audit trail dialog
+- fallback edge info dialog
+
+So edge interactions need to remain data-rich and customizable.
+
+### Practical implication
+
+For `myterms`, `ProcessFlowDiagram` likely needs a V2 runtime model centered on:
+
+- diagram state
+- effects
+- completion triggers
+- branching
+
+In other words, `cc-architecture` validates the basic wrapper and step-orchestration pattern, but `myterms` is the real forcing function for:
+
+- dynamic edges
+- pulse sequences
+- round trips
+- branching
+- node-driven events
+- restartable but stateful sessions
+
 ## Suggested Implementation Sequence
 
 1. Add explicit node-id template binding to `xmlui-react-flow`.

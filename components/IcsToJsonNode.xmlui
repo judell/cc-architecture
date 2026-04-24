@@ -1,4 +1,4 @@
-<Component name="IcsToJsonNode" var.currentPhase="{($diagram && $diagram.phase !== undefined) ? $diagram.phase : phase}">
+<Component name="IcsToJsonNode">
   <ModalDialog id="jsonDetailDialog" title="ics_to_json.py">
     <VStack gap="$space-2">
       <Text fontSize="$fontSize-small" color="$textColor-secondary">
@@ -25,12 +25,12 @@
     </Text>
     <Text
       fontSize="$fontSize-small"
-      when="{currentPhase &lt; 2}"
+      when="{diagramPhase($diagram, phase) &lt; 2}"
       color="$textColor-secondary"
       textAlign="center">
       Waiting for input...
     </Text>
-    <VStack when="{currentPhase >= 3}" gap="$space-1">
+    <VStack when="{diagramPhase($diagram, phase) >= 3}" gap="$space-1">
       <Text fontSize="$fontSize-small" textAlign="center">
         Timezone: America/Los_Angeles
       </Text>
