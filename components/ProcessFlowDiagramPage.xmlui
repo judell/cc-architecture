@@ -16,46 +16,6 @@
     url="layout.json"
     onLoaded="{(data) => { layout = data }}" />
 
-  <Timer
-    enabled="{phase === 'collecting'}"
-    interval="{pulseDuration}"
-    onTick="{() => onCollectDone()}" />
-
-  <Timer
-    enabled="{phase === 'combining'}"
-    interval="{pulseDuration}"
-    onTick="{() => onCombineDone()}" />
-
-  <Timer
-    enabled="{phase === 'converting'}"
-    interval="{pulseDuration}"
-    onTick="{() => onConvertDone()}" />
-
-  <Timer
-    enabled="{phase === 'classifying'}"
-    interval="{pulseDuration}"
-    onTick="{() => onClassifyDone()}" />
-
-  <Timer
-    enabled="{phase === 'loading'}"
-    interval="{pulseDuration}"
-    onTick="{() => onLoadDone()}" />
-
-  <Timer
-    enabled="{phase === 'refreshing'}"
-    interval="{pulseDuration}"
-    onTick="{() => onRefreshDone()}" />
-
-  <Timer
-    enabled="{roundTrip !== ''}"
-    interval="{pulseDuration * 2}"
-    onTick="{() => onRoundTripComplete()}" />
-
-  <Timer
-    enabled="{phase === 'displaying'}"
-    interval="{pulseDuration}"
-    onTick="{() => onDisplayDone()}" />
-
   <Stack
     height="calc(100vh - 48px)"
     width="100%"
@@ -85,13 +45,10 @@
       showMinimap="{false}"
       showControls="{true}"
       showBackground="{true}"
-      title="{phaseLabel}"
-      message="{phaseMessage}"
-      actionLabel="{buttonLabel}"
-      actionEnabled="{buttonEnabled}"
-      onAction="{() => nextStep()}"
+      steps="{getProcessFlowSteps()}"
+      onPhaseChange="{(e) => { phase = e.phase }}"
       onEdgeInfoClick="{(e) => { edgeLabel = e.label; edgeId = e.edgeId; edgeInfoDialog.open() }}"
-      nodes="{(phase, phaseLabel, phaseMessage, buttonLabel, buttonEnabled, getNodes().filter((n) => n.id !== 'control'))}"
+      nodes="{(phase, getNodes().filter((n) => n.id !== 'control'))}"
       edges="{getEdges()}">
       <IcsFeedsNode />
       <ScrapersNode />

@@ -7,12 +7,11 @@
   <script>window.__cb = Date.now();</script>
   <script>document.write('<script src="xmlui/xmlui-standalone.umd.js?v=' + __cb + '"><\/script>');</script>
   <script>
-    window.react_jsx_runtime = window.react_jsx_runtime || window.jsxRuntime;
     window.process = window.process || { env: { NODE_ENV: "production" } };
     window.require = window.require || function(name) {
       if (name === "react") return window.React;
       if (name === "react-dom") return window.ReactDOM;
-      if (name === "react/jsx-runtime") return window.react_jsx_runtime || window.jsxRuntime;
+      if (name === "react/jsx-runtime") return window.jsxRuntime;
       if (name === "xmlui") return window.xmlui;
       throw new Error("Unsupported standalone require: " + name);
     };

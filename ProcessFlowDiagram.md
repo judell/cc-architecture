@@ -456,6 +456,46 @@ If either app requires large amounts of custom timer wiring after migration, the
 4. Migrate `cc-architecture` first because it is the simpler linear case.
 5. Migrate `myterms` second to force support for branching and transient-edge workflows.
 
+## Current Status
+
+We now have the first live harness running in `cc-architecture`.
+
+What works today:
+
+- `cc-architecture` keeps the old route at `/`
+- a new route at `/process-flow` renders a first-cut `ProcessFlowDiagram`
+- `ProcessFlowDiagram` currently wraps `ReactFlowCanvasRender`
+- the wrapper owns the title/message/action overlay
+- `xmlui-react-flow` now emits `onPulseStep` and `onPulseComplete`
+- the package itself builds, and the live app can render it
+
+What we changed in `xmlui` to get here:
+
+- added `packages/xmlui-process-flow`
+- added an initial `ProcessFlowDiagram` component
+- exported `ReactFlowCanvasRender` from `xmlui-react-flow`
+- added package export metadata to `xmlui-react-flow`
+- fixed `xmlui build-lib` so standalone UMD bundles use `window.jsxRuntime` instead of guessing `window.react_jsx_runtime`
+
+What is still temporary:
+
+- `ProcessFlowDiagram` is not yet the workflow engine; `cc-architecture/components/ProcessFlowDiagramPage.xmlui` still owns the phase timers, step progression, `getNodes()`, and `getEdges()`
+- the `cc-architecture` harness still loads a copied extension bundle rather than a smoother dev workflow
+- the standalone harness still needs `window.process` and `window.require` shims in `index.html`
+
+Why the harness still needs shims:
+
+- even after the `jsxRuntime` fix, the generated `xmlui-process-flow.js` still contains Rolldown CJS interop paths that call `require("react")` and checks against `process.env.NODE_ENV`
+- so the current blocker is no longer XMLUI routing or component registration syntax
+- the remaining blocker is extension bundling/standalone compatibility
+
+Debt to pay down next:
+
+- move step sequencing and timer logic from app code into `ProcessFlowDiagram`
+- add explicit node-template binding by node id so migration does not depend on child order
+- eliminate the `window.require` and `window.process` shims by fixing the extension bundling path cleanly
+- only after that start the `myterms` migration, because it will amplify every unresolved abstraction gap
+
 ## Later TODO
 
 If the base `ProcessFlowDiagram` extraction works, add a higher-level authoring helper for graph declarations so authors do not have to hand-write verbose, error-prone edge objects with `source`, `target`, `sourceHandle`, and `targetHandle`.

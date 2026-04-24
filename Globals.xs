@@ -122,6 +122,106 @@ function onDisplayDone() {
 
 // --- Node & edge builders ---
 
+function getProcessFlowSteps() {
+  return [
+    {
+      id: 'collect',
+      title: '1',
+      message: 'Collect from sources',
+      actionLabel: 'Collect',
+      phase: 0,
+      runningPhase: 'collecting',
+      completeAfterMs: pulseDuration,
+      run: [
+        { type: 'pulse', edge: 'download feeds', durationMs: pulseDuration },
+        { type: 'pulse', edge: 'run scrapers', durationMs: pulseDuration },
+        { type: 'pulse', edge: 'collect picks', durationMs: pulseDuration },
+      ],
+    },
+    {
+      id: 'combine',
+      title: '2',
+      message: 'Combine per-city ICS files',
+      actionLabel: 'Combine',
+      phase: 1,
+      runningPhase: 'combining',
+      completeAfterMs: pulseDuration,
+      run: [
+        { type: 'pulse', edge: 'per-city .ics', durationMs: pulseDuration },
+      ],
+    },
+    {
+      id: 'convert',
+      title: '3',
+      message: 'Convert to JSON & cluster',
+      actionLabel: 'Convert',
+      phase: 2,
+      runningPhase: 'converting',
+      completeAfterMs: pulseDuration,
+      run: [
+        { type: 'pulse', edge: 'combined.ics', durationMs: pulseDuration },
+      ],
+    },
+    {
+      id: 'classify',
+      title: '4',
+      message: 'Classify with Claude AI',
+      actionLabel: 'Classify',
+      phase: 3,
+      runningPhase: 'classifying',
+      completeAfterMs: pulseDuration,
+      run: [
+        { type: 'pulse', edge: 'events.json', durationMs: pulseDuration },
+      ],
+    },
+    {
+      id: 'load',
+      title: '5',
+      message: 'Load events to Supabase',
+      actionLabel: 'Load',
+      phase: 4,
+      runningPhase: 'loading',
+      completeAfterMs: pulseDuration,
+      run: [
+        { type: 'pulse', edge: 'classified JSON', durationMs: pulseDuration },
+      ],
+    },
+    {
+      id: 'refresh',
+      title: '6',
+      message: 'Upsert to database',
+      actionLabel: 'Upsert',
+      phase: 5,
+      runningPhase: 'refreshing',
+      completeAfterMs: pulseDuration,
+      run: [
+        { type: 'pulse', edge: 'upsert events', durationMs: pulseDuration },
+      ],
+    },
+    {
+      id: 'display',
+      title: '7',
+      message: 'Query & render in frontend',
+      actionLabel: 'Display',
+      phase: 6,
+      runningPhase: 'displaying',
+      completeAfterMs: pulseDuration,
+      run: [
+        { type: 'pulse', edge: 'REST query', durationMs: pulseDuration },
+      ],
+    },
+    {
+      id: 'done',
+      title: '',
+      message: 'Pipeline complete',
+      actionLabel: 'Start Over',
+      phase: 7,
+      restartOnAction: true,
+      clearPulseOnRestart: true,
+    },
+  ];
+}
+
 function makeNode(id, label, chrome) {
   const n = layout.nodes[id] || { x: 0, y: 0, width: 200, height: 150 };
   const data = chrome === false ? { label: label, chrome: false } : { label: label };
