@@ -14,46 +14,45 @@ https://github.com/user-attachments/assets/97da6355-912c-4f8f-a2ff-7a3a7b1740bd
 
 Click through 7 pipeline phases to see how event data flows from ICS feeds, web scrapers, and curator picks through GitHub Actions, deduplication, AI classification, Supabase, and into the XMLUI frontend.
 
-## Second use of a raw capability
+## Step Machine DSL
 
-This is the second project built with this approach. The first was [MyTerms](https://github.com/judell/myterms), an explainer for IEEE Std 7012-2025. Both projects use the same toolkit: XMLUI components rendered inside ReactFlowCanvas nodes, with animated edges showing data flow between them. The fact that it's been done twice suggests a capability that wants to be extracted and refined so that visualizations like this can be made in a more principled, more easily declarative way.
+The diagram is driven by a declarative step machine. Each pipeline phase is an object in a step array:
 
-## How this was built
+```js
+{
+  id: 'collect',
+  title: '1',
+  message: 'Collect from sources',
+  actionLabel: 'Collect',
+  phase: 0,
+  runningPhase: 'collecting',
+  completeAfterMs: pulseDuration,
+  run: [
+    { type: 'pulse', edge: 'download feeds', durationMs: pulseDuration },
+    { type: 'pulse', edge: 'run scrapers', durationMs: pulseDuration },
+    { type: 'pulse', edge: 'collect picks', durationMs: pulseDuration },
+  ],
+}
+```
 
-An AI assistant (Claude) studied the MyTerms explainer — its Globals.xs state machine, its ReactFlowPage.xmlui canvas wiring, its node components — then pattern-copied the structure to build this community-calendar version. XMLUI Inspector traces were essential for debugging: when nodes didn't render or the state machine stalled, the trace showed exactly which phase transitions fired, which timers ticked, and which data bindings updated.
+A generic runtime in `Globals.xs` interprets these declarations, writes to XMLUI globals, and executes edge animation effects. A single Timer in the page markup handles step completion. Adding a step means adding an object to the array — no new functions, timers, or wiring needed.
 
-The process worked, but it was rough:
+See [StepMachineDSL.md](StepMachineDSL.md) for the full DSL reference.
 
-- **Undocumented ReactFlowCanvas API.** The canvas component lives in a separate package without standard XMLUI docs. Edge handle names (`right-top`, `left-bottom`, etc.), the node/child mapping convention, `pulseEdge` / `pulseEdgeRoundTrip` / `addEdge` / `removeEdge` — all of this was reverse-engineered from the working MyTerms code. Documenting the canvas API would make this kind of project far more accessible.
+## Companion project
 
-- **Manual state machine wiring.** Each phase requires a function in Globals.xs, a Timer in ReactFlowPage.xmlui, and corresponding `when` guards in node components. This is boilerplate that could be generated from a simpler declaration — something like a list of phases with their edge animations and node state changes.
-
-## Layout management
-
-ReactFlowCanvas nodes are draggable, and a save button exports the current positions as `layout.json`. This is genuinely useful: you can auto-generate an initial layout, then drag nodes into a clean arrangement by hand. But the handoff is awkward — you click save, a file downloads to ~/Downloads, and you have to copy it back into the project and commit it. A tighter loop (e.g., saving directly to the project, or a dev mode that auto-persists positions) would make iterating on layout much more pleasant.
+This is paired with [MyTerms](https://github.com/judell/myterms), an explainer for IEEE Std 7012-2025. Both projects use the same step machine DSL and the same toolkit: XMLUI components rendered inside ReactFlowCanvas nodes, with animated edges showing data flow. MyTerms exercises the DSL's richer features: transient edges, round-trip animations, pulse sequences, conditional branching, node-driven step triggers, and partial restart.
 
 ## XMLUI components in canvas nodes
 
-The most powerful aspect of this approach is that canvas nodes aren't just labels — they're full XMLUI components. Each node can contain tables, text, icons, select dropdowns, buttons, and modal dialogs. In the MyTerms demo, Alice's node has a `Select` for choosing privacy terms and a `Table` showing her data store. In this demo, the Supabase node shows the events table and deduplicated view, the Classifier node shows category assignments, and the Frontend node renders simulated event cards.
+Canvas nodes aren't just labels — they're full XMLUI components. Each node can contain tables, text, icons, select dropdowns, buttons, and modal dialogs. The Supabase node shows the events table, the Classifier node shows category assignments, and the Frontend node renders simulated event cards.
 
-This means a canvas node can be a live, interactive widget — not just a box in a diagram. The potential goes well beyond explainers:
+This means a canvas node can be a live, interactive widget — not just a box in a diagram. The potential goes beyond explainers:
 
 - **Dashboards** where each node is a live data view, connected by edges showing data dependencies
 - **Workflow builders** where users drag and connect functional components
 - **System monitors** where nodes show real-time status and edges show data flow between services
-- **Interactive tutorials** where each node is a step with embedded exercises
 
-The combination of a Visio-like canvas with reactive, data-bound components inside each node is unusual. Most diagramming tools give you shapes and arrows; this gives you shapes and arrows where each shape is a mini-application.
+## Layout management
 
-## A better method
-
-What would a more principled version look like? Probably a declarative format that specifies:
-
-1. **Nodes** — id, label, component name, initial position/size
-2. **Edges** — source, target, handles, label
-3. **Phases** — ordered list, each declaring which edges animate, which node states change, what the button says
-4. **Data** — sample data that populates nodes at each phase
-
-From that declaration, the framework would generate the Globals.xs state machine, the ReactFlowPage timers, and the phase-gated `when` expressions automatically. The author would only write the node component templates and supply the data. Layout could be declared initially and refined by dragging, with a save-in-place workflow.
-
-This would turn an arduous AI-assisted build into something anybody could do a lot more easily.
+ReactFlowCanvas nodes are draggable, and a save button exports the current positions as `layout.json`. You can auto-generate an initial layout, then drag nodes into a clean arrangement by hand.
